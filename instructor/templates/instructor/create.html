@@ -1,0 +1,73 @@
+{% extends 'main/index.html' %}
+{% load static %}
+
+{% block title %}Instrutor - Novo{% endblock %}
+{% block page_title %}Cadastro de instrutor{% endblock %}
+
+{% block style %}
+<link rel="stylesheet" href="{% static 'instructor/css/instructor.css' %}"> {% endblock %}
+
+{% block content %}
+<div class="card card-primary card-outline">
+    <div class="card-header">
+        <h5 class="card-title my-auto">Informações do instrutor</h5>
+        <div class="card-tools">
+            <a href="/instructor/create" class="btn btn-primary"><i class="fas fa-plus"></i> Novo</a>
+        </div>
+    </div>
+    <div class="card-body">
+        <form action="/create" method="POST" id="instructor-form">
+            <div class="row">
+                <div class="col-md-7">
+                    <div class="form-group">
+                        <label for="instructor-name">Nome do instrutor</label>
+                        <input type="text" class="form-control" id="instructor-name"
+                            placeholder="Insira o nome do instrutor">
+                    </div>
+                </div>
+                <div class="col-md-5">
+                    <div class="form-group">
+                        <label for="instructor-email">Email</label>
+                        <input type="email" class="form-control" id="instructor-email" placeholder="Insira o email">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="instructor-rg">RG</label>
+                        <input type="text" class="form-control" id="instructor-rg" placeholder="Insira o RG">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="instructor-cpf">CPF</label>
+                        <input type="text" class="form-control" id="instructor-cpf" placeholder="Insira o CPF">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="instructor-phone1">Telefone 1</label>
+                        <input type="text" class="form-control" id="instructor-phone1" placeholder="Telefone principal">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="class-phone2">Telefone 2</label>
+                        <input type="text" class="form-control" id="instructor-phone2"
+                            placeholder="Telefone secundário">
+                    </div>
+                </div>
+
+                <div class="col-md-12 text-right mt-4">
+                    <button type="reset" onclick="clear_instructors_form()" class="btn btn-secondary">
+                        <i class="fas fa-eraser"></i> Limpar
+                    </button>
+                    <button type="submit" class="btn btn-success">Salvar</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock content %}
+
+{% block script %} <script src="{% static 'instructor/js/instructor.js' %}"></script> {% endblock %}

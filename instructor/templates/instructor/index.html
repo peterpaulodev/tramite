@@ -1,0 +1,68 @@
+{% extends 'main/index.html' %}
+{% load static %}
+
+{% block title %}Instrutores{% endblock %}
+{% block page_title %}Instrutores{% endblock %}
+
+{% block content %}
+<div class="card card-primary card-outline">
+    <div class="card-header">
+        <h5 class="card-title my-auto">Listagem de instrutors</h5>
+        <div class="card-tools">
+            <a href="create" class="btn btn-primary"><i class="fas fa-plus"></i> Novo</a>
+        </div>
+    </div>
+    <div class="card-body">
+        <table id="instructor-list" class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Nome do instrutor</th>
+                    <th>Email</th>
+                    <th>CPF</th>
+                    <th>Telefone</th>
+                    <th>Documentação</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for instructor in instructors %}
+                <tr>
+                    <td>
+                        <i class="fas fa-user mr-1"></i>
+                        {{ instructor.name | title }}
+                    </td>
+                    <td>{{ instructor.email }}</td>
+                    <td>{{ instructor.cpf }}</td>
+                    <td>{{ instructor.primary_phone }}</td>
+                    <td class="text-center">
+                        <i class="fas fa-check text-success"></i> Entregue
+                        <br>
+                        <i class="fas fa-clock text-warning"></i> Em análise
+                    </td>
+                    <td class="text-center">
+                        <a href="edit/{{ instructor.id }}" title="Editar Instrutor" data-toggle="tooltip" data-placement="top">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th>Nome do instrutor</th>
+                    <th>Email</th>
+                    <th>CPF</th>
+                    <th>Telefone</th>
+                    <th>Documentação</th>
+                    <th>Ações</th>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>
+{% endblock content %}
+
+{% block script %}
+    <script src="{% static 'instructor/js/instructor.js' %}"></script>
+{% endblock script %}
+

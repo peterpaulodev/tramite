@@ -1,0 +1,64 @@
+{% extends 'main/index.html' %}
+{% load static %}
+
+{% block title %}Cursos{% endblock %}
+{% block page_title %}Cursos{% endblock %}
+
+{% block content %}
+<div class="card card-primary card-outline">
+    <div class="card-header">
+        <h5 class="card-title my-auto">Listagem de cursos</h5>
+        <div class="card-tools">
+            <a href="create" class="btn btn-primary"><i class="fas fa-plus"></i> Novo</a>
+        </div>
+    </div>
+    <div class="card-body">
+        <table id="class-list" class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nome do curso</th>
+                    <th>Instrutor</th>
+                    <th>Data inicial</th>
+                    <th>Data final</th>
+                    <th>Cidade</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for class in classes %}
+                <tr>
+                    <td>{{ class.id }}</td>
+                    <td>{{ class.name | title }}</td>
+                    <td>{{ class.instructor | title }}</td>
+                    <td>{{ class.initial_date | date:"d/m/Y" }}</td>
+                    <td>{{ class.finish_date | date:"d/m/Y" }}</td>
+                    <td>{{ class.city | title }}</td>
+                    <td class="text-center">
+                        <a href="edit/{{ class.id }}" title="Editar Curso" data-toggle="tooltip" data-placement="top">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th>ID</th>
+                    <th>Nome do curso</th>
+                    <th>Instrutor</th>
+                    <th>Data inicial</th>
+                    <th>Data final</th>
+                    <th>Cidade</th>
+                    <th>Ações</th>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>
+{% endblock content %}
+
+{% block script %}
+    <script src="{% static 'class/js/class.js' %}"></script>
+{% endblock script %}
+

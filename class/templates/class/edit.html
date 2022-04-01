@@ -1,0 +1,126 @@
+{% extends 'main/index.html' %}
+{% load static %}
+
+{% block title %}Cursos - Novo{% endblock %}
+{% block page_title %}Cadastro de curso{% endblock %}
+
+{% block style %}
+<link rel="stylesheet" href="{% static 'class/css/class.css' %}"> {% endblock %}
+
+{% block content %}
+<div class="card card-primary card-outline">
+    <div class="card-header">
+        <h5 class="card-title my-auto">Informações do cursos</h5>
+        <div class="card-tools d-flex">
+            <p class="my-auto mr-3">Quantidade de alunos: 10</p>
+            <a href="/class/create" class="btn btn-primary"><i class="fas fa-plus"></i> Novo</a>
+        </div>
+    </div>
+    <div class="card-body">
+        <form action="/create" method="POST" id="class-form">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="class-id">ID</label>
+                        <input type="text" class="form-control" id="class-id" placeholder="Insira o ID do curso" value="{{ class.id }}">
+                    </div>
+                </div>
+                <div class="col-md-9">
+                    <div class="form-group">
+                        <label for="class-name">Nome do curso</label>
+                        <input type="text" class="form-control" id="class-name" placeholder="Insira o nome do curso" value="{{ class.name }}">
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="teacher-name">Instrutor do curso</label>
+                        <select id="teacher-name" class="form-control">
+                            <option value="0">Selecione o instrutor</option>
+                            {% for instructor in instructors %}
+                            <option {% if instructor.id == class.instructor.id %}selected{% endif %}
+                                value="{{ instructor.id }}">{{ instructor.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Data inicial</label>
+                        <div class="input-group date" data-target-input="nearest">
+                            <input type="text" class="form-control datetimepicker-input" id="initial-date"
+                                data-toggle="datetimepicker" data-target="#initial-date" value="{{ class.initial_date }}" />
+                            <div class="input-group-append" data-target="#initial-date" data-toggle="datetimepicker">
+                                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Data final</label>
+                        <div class="input-group date" data-target-input="nearest">
+                            <input type="text" id="final-date" class="form-control datetimepicker-input"
+                                data-toggle="datetimepicker" data-target="#final-date"value="{{ class.finish_date }}"  />
+                            <div class="input-group-append" data-target="#final-date" data-toggle="datetimepicker">
+                                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row divisor mt-3">
+                <h5 class="col-md-12 mb-4">Informações do endereço</h5>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="class-zipcode">CEP</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="class-zipcode" placeholder="Insira o CEP" value="{{ class.zipcode }}">
+                            <span class="input-group-append">
+                                <button class="btn btn-primary" id="search-zipcode">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="class-neighbourhood">Bairro</label>
+                        <input type="text" class="form-control" id="class-neighbourhood" placeholder="Insira o bairro" value="{{ class.neigh }}">
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="class-city">Cidade</label>
+                        <input type="text" class="form-control" id="class-city" placeholder="Insira a cidade" value="{{ class.city }}">
+                    </div>
+                </div>
+                <div class="col-md-9">
+                    <div class="form-group">
+                        <label for="class-address">Endereço</label>
+                        <input type="text" class="form-control" id="class-address" placeholder="Insira o nome da rua" value="{{ class.address }}">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="class-number">Número</label>
+                        <input type="text" class="form-control" id="class-number" placeholder="Insira o número" value="{{ class.number }}">
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12 text-right mt-4">
+                    <button type="reset" onclick="clear_class_form()" class="btn btn-secondary">
+                        <i class="fas fa-eraser"></i> Limpar
+                    </button>
+                    <button type="submit" class="btn btn-success">Salvar</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock content %}
+
+{% block script %} <script src="{% static 'class/js/class.js' %}"></script> {% endblock %}
