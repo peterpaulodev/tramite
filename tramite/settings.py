@@ -25,8 +25,7 @@ SECRET_KEY = 'django-insecure-oztw(86g_4b0v$)hyn#v*s13j!!1v$$b2s)2cw%7i=uz6z)&07
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = ['plataforma.tramiteaereo.com.br', 'http://plataforma.tramiteaereo.com.br', 'www.plataforma.tramiteaereo.com.br']
 
 # Application definition
 
