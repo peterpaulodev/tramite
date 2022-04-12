@@ -77,12 +77,27 @@ WSGI_APPLICATION = 'tramite.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
+if DEBUG:
+    DATABASE_CONFIG = {
+        'ENGINE'  : 'django.db.backends.mysql',
+        'NAME'    : 'tramite',
+        'USER'    : 'root',
+        'PASSWORD': '102145',
+        'HOST'    : 'localhost',
+        'PORT'    : '3306',
+    }
+else:
+    DATABASE_CONFIG = {
+        'ENGINE'  : 'django.db.backends.mysql',
+        'NAME'    : 'tramite_plataforma',
+        'USER'    : 'tramite_userplataforma',
+        'PASSWORD': '_CmdJj[(^X0%',
+        'HOST'    : '67.23.238.236',
+        'PORT'    : '3306',
+    }
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    'default': DATABASE_CONFIG
 }
 
 
@@ -127,12 +142,15 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "static"),
-    ('class', 'class/static'),
-    ('instructor', 'instructor/static')
-]
-
 LOGIN_REDIRECT_URL = '/class'
 LOGOUT_REDIRECT_URL = '/accounts/login'
+
+if DEBUG:
+    STATICFILES_DIRS = [
+        os.path.join(BASE_DIR, "static"),
+        ('class', 'class/static'),
+        ('instructor', 'instructor/static')
+    ]
+else:
+    STATIC_ROOT = '/home/tramite/plataforma.tramiteaereo.com.br/static/'
 

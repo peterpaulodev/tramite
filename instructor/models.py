@@ -25,7 +25,7 @@ class InstructorDocuments(models.Model):
     tests = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-
+    
     instructor = models.ForeignKey("Instructor", on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
