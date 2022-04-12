@@ -1,0 +1,6 @@
+
+---
+deployment:
+  tasks:
+    - export DEPLOYPATH=/home/tramite/public_html/
+    - /bin/cp -R * $DEPLOYPATH
