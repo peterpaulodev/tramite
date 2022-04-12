@@ -29,7 +29,7 @@
                 <div class="col-md-9">
                     <div class="form-group">
                         <label for="class-name">Nome do curso</label>
-                        <input type="text" class="form-control" id="class-name" placeholder="Insira o nome do curso">
+                        {% render_field class_form.name type="text" class="form-control" id="class-name" placeholder="Insira o nome do curso" %}
                     </div>
                 </div>
                 <div class="col-md-4">
@@ -38,7 +38,7 @@
                         <select id="teacher-name" class="form-control">
                             <option value="0" selected>Selecione o instrutor</option>
                             {% for instructor in instructors %}
-                                <option value="{{ instructor.id }}">{{ instructor.name }}</option>
+                            <option value="{{ instructor.id }}">{{ instructor.name }}</option>
                             {% endfor %}
                         </select>
                     </div>
@@ -47,8 +47,7 @@
                     <div class="form-group">
                         <label>Data inicial</label>
                         <div class="input-group date" data-target-input="nearest">
-                            <input type="text" class="form-control datetimepicker-input" id="initial-date"
-                                data-toggle="datetimepicker" data-target="#initial-date" />
+                            {% render_field class_form.anac_id type="text" class="form-control datetimepicker-input" id="initial-date" data-toggle="datetimepicker" data-target="#initial-date" %}
                             <div class="input-group-append" data-target="#initial-date" data-toggle="datetimepicker">
                                 <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                             </div>
@@ -59,8 +58,7 @@
                     <div class="form-group">
                         <label>Data final</label>
                         <div class="input-group date" data-target-input="nearest">
-                            <input type="text" id="final-date" class="form-control datetimepicker-input"
-                                data-toggle="datetimepicker" data-target="#final-date" />
+                            {% render_field class_form.anac_id type="text" id="final-date" class="form-control datetimepicker-input" data-toggle="datetimepicker" data-target="#final-date" %}
                             <div class="input-group-append" data-target="#final-date" data-toggle="datetimepicker">
                                 <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                             </div>
@@ -75,7 +73,7 @@
                     <div class="form-group">
                         <label for="class-zipcode">CEP</label>
                         <div class="input-group">
-                            <input type="text" class="form-control" id="class-zipcode" placeholder="Insira o CEP">
+                            {% render_field class_form.anac_id type="text" class="form-control" id="class-zipcode" placeholder="Insira o CEP" %}
                             <span class="input-group-append">
                                 <button class="btn btn-primary" id="search-zipcode">
                                     <i class="fas fa-search"></i>
@@ -87,25 +85,25 @@
                 <div class="col-md-4">
                     <div class="form-group">
                         <label for="class-neighbourhood">Bairro</label>
-                        <input type="text" class="form-control" id="class-neighbourhood" placeholder="Insira o bairro">
+                        {% render_field class_form.anac_id type="text" class="form-control" id="class-neighbourhood" placeholder="Insira o bairro" %}
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-group">
                         <label for="class-city">Cidade</label>
-                        <input type="text" class="form-control" id="class-city" placeholder="Insira a cidade">
+                        {% render_field class_form.anac_id type="text" class="form-control" id="class-city" placeholder="Insira a cidade" %}
                     </div>
                 </div>
                 <div class="col-md-9">
                     <div class="form-group">
                         <label for="class-address">Endereço</label>
-                        <input type="text" class="form-control" id="class-address" placeholder="Insira o nome da rua">
+                        {% render_field class_form.anac_id type="text" class="form-control" id="class-address" placeholder="Insira o nome da rua" %}
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="form-group">
                         <label for="class-number">Número</label>
-                        <input type="text" class="form-control" id="class-number" placeholder="Insira o número">
+                        {% render_field class_form.anac_id type="text" class="form-control" id="class-number" placeholder="Insira o número" %}
                     </div>
                 </div>
             </div>

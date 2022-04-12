@@ -1,8 +1,9 @@
 {% extends 'main/index.html' %}
 {% load static %}
+{% load widget_tweaks %}
 
 {% block title %}Instrutor - Novo{% endblock %}
-{% block page_title %}Cadastro de instrutor{% endblock %}
+{% block page_title %}<i class="fas fa-edit"></i> Editando: {{ instructor.name }}{% endblock %}
 
 {% block style %}
 <link rel="stylesheet" href="{% static 'instructor/css/instructor.css' %}"> {% endblock %}
@@ -16,44 +17,44 @@
         </div>
     </div>
     <div class="card-body">
-        <form action="/create" method="POST" id="instructor-form">
+        <form method="POST" id="instructor-form">
+            {% csrf_token %}
+
             <div class="row">
                 <div class="col-md-7">
                     <div class="form-group">
                         <label for="instructor-name">Nome do instrutor</label>
-                        <input value="{{ instructor.name }}" type="text" class="form-control" id="instructor-name"
-                            placeholder="Insira o nome do instrutor">
+                        {% render_field instructor_form.name type="text" class="form-control" id="instructor-name" placeholder="Insira o nome do instrutor" %}
                     </div>
                 </div>
                 <div class="col-md-5">
                     <div class="form-group">
                         <label for="instructor-email">Email</label>
-                        <input value="{{ instructor.email }}" type="email" class="form-control" id="instructor-email" placeholder="Insira o email">
+                        {% render_field instructor_form.email type="email" class="form-control" id="instructor-email" placeholder="Insira o email" %}
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="form-group">
                         <label for="instructor-rg">RG</label>
-                        <input value="{{ instructor.rg }}" type="text" class="form-control" id="instructor-rg" placeholder="Insira o RG">
+                        {% render_field instructor_form.rg type="text" class="form-control" id="instructor-rg" placeholder="Insira o RG" %}
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="form-group">
                         <label for="instructor-cpf">CPF</label>
-                        <input value="{{ instructor.cpf }}" type="text" class="form-control" id="instructor-cpf" placeholder="Insira o CPF">
+                        {% render_field instructor_form.cpf type="text" class="form-control" id="instructor-cpf" placeholder="Insira o CPF" %}
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="form-group">
                         <label for="instructor-phone1">Telefone 1</label>
-                        <input value="{{ instructor.primary_phone }}" type="text" class="form-control" id="instructor-phone1" placeholder="Telefone principal">
+                        {% render_field instructor_form.primary_phone type="text" class="form-control" id="instructor-phone1" placeholder="Telefone principal" %}
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="form-group">
                         <label for="class-phone2">Telefone 2</label>
-                        <input value="{{ instructor.secondary_phone }}" type="text" class="form-control" id="instructor-phone2"
-                            placeholder="Telefone secundário">
+                        {% render_field instructor_form.secondary_phone type="text" class="form-control" id="instructor-phone2" placeholder="Telefone secundário" %}
                     </div>
                 </div>
 

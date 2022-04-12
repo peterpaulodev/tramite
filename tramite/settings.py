@@ -59,7 +59,7 @@ ROOT_URLCONF = 'tramite.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -132,3 +132,7 @@ STATICFILES_DIRS = [
     ('class', 'class/static'),
     ('instructor', 'instructor/static')
 ]
+
+LOGIN_REDIRECT_URL = '/class'
+LOGOUT_REDIRECT_URL = '/accounts/login'
+

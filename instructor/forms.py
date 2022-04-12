@@ -1,10 +1,9 @@
 from dataclasses import fields
 from django import forms
-from .models import Classes
+from .models import Instructor
 
-
-class ClassesForm(forms.ModelForm):
+class InstructorForm(forms.ModelForm):
 
     class Meta:
-        model = Classes
+        model = Instructor
         fields = '__all__'
