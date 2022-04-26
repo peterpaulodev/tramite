@@ -35,25 +35,25 @@
                 <div class="col-md-3">
                     <div class="form-group">
                         <label for="instructor-rg">RG</label>
-                        {% render_field instructor_form.rg type="text" class="form-control" id="instructor-rg" placeholder="Insira o RG" %}
+                        {% render_field instructor_form.rg type="text" minlength="12" class="form-control" id="instructor-rg" placeholder="Insira o RG" %}
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="form-group">
                         <label for="instructor-cpf">CPF</label>
-                        {% render_field instructor_form.cpf type="text" class="form-control" id="instructor-cpf" placeholder="Insira o CPF" %}
+                        {% render_field instructor_form.cpf type="text" minlength="14" class="form-control" id="instructor-cpf" placeholder="Insira o CPF" %}
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="form-group">
                         <label for="instructor-phone1">Telefone 1</label>
-                        {% render_field instructor_form.primary_phone type="text" class="form-control" id="instructor-phone1" placeholder="Telefone principal" %}
+                        {% render_field instructor_form.primary_phone type="text" minlength="15" class="form-control" id="instructor-phone1" placeholder="Telefone principal" %}
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="form-group">
                         <label for="class-phone2">Telefone 2</label>
-                        {% render_field instructor_form.secondary_phone type="text" class="form-control" id="instructor-phone2" placeholder="Telefone secundário" %}
+                        {% render_field instructor_form.secondary_phone type="text" minlength="15" class="form-control" id="instructor-phone2" placeholder="Telefone secundário" %}
                     </div>
                 </div>
 

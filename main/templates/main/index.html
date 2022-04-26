@@ -142,7 +142,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
             <div class="content-header">
                 <div class="container-fluid">
                     <div class="row mb-2">
-                        <div class="col-sm-6">
+                        <div class="col-sm-12">
                             <h1 class="m-0">{% block page_title %}{% endblock %}</h1>
                         </div>
                         <!-- /.col -->
@@ -159,6 +159,28 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 <!-- /.container-fluid -->
             </div>
             <!-- /.content-header -->
+
+            {% if messages %}
+                <ul class="messages">
+                    {% for message in messages %}
+                        <li role="alert" {% if message.tags %}class="alert alert-{{message.tags}}"{% endif %}>
+                            {% if message.tags == 'error' %}
+                                <i class="fas fa-exclamation-triangle mr-2"></i>
+                            {% endif %}
+
+                            {% if message.tags == 'info' %}
+                                <i class="fas fa-exclamation-circle mr-2"></i>
+                            {% endif %}
+
+                            {% if message.tags == 'success' %}
+                                <i class="fas fa-check-circle mr-2"></i>
+                            {% endif %}
+
+                            {{message}}
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
 
             <!-- Main content -->
             <div class="content">

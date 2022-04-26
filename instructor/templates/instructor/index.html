@@ -35,9 +35,11 @@
                     <td>{{ instructor.cpf }}</td>
                     <td>{{ instructor.primary_phone }}</td>
                     <td class="text-center">
-                        <i class="fas fa-check text-success"></i> Entregue
-                        <br>
-                        <i class="fas fa-clock text-warning"></i> Em análise
+                        {% if instructor.ready_documents %}
+                            <i class="fas fa-check text-success"></i> Entregue
+                        {% else %}
+                            <i class="fas fa-clock text-warning"></i> Em análise
+                        {% endif %}
                     </td>
                     <td class="text-center">
                         <a href="edit/{{ instructor.id }}" title="Editar Instrutor" data-toggle="tooltip" data-placement="top">

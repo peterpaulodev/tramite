@@ -149,6 +149,9 @@ if DEBUG:
         ('class', 'class/static'),
         ('instructor', 'instructor/static')
     ]
+    MEDIA_ROOT  = os.path.join(BASE_DIR, 'media')
 else:
     STATIC_ROOT = '/home/tramite/plataforma.tramiteaereo.com.br/static/'
+    MEDIA_ROOT = '/home/tramite/plataforma.tramiteaereo.com.br/media/'
 
+MEDIA_URL = '/media/'

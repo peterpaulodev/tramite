@@ -2,7 +2,7 @@
 {% load static %}
 {% load widget_tweaks %}
 
-{% block title %}Instrutor - Novo{% endblock %}
+{% block title %}Instrutor - Editar{% endblock %}
 {% block page_title %}<i class="fas fa-edit"></i> Editando: {{ instructor.name }}{% endblock %}
 
 {% block style %}
@@ -36,33 +36,33 @@
                 <div class="col-md-3">
                     <div class="form-group">
                         <label for="instructor-rg">RG</label>
-                        {% render_field instructor_form.rg type="text" class="form-control" id="instructor-rg" placeholder="Insira o RG" %}
+                        {% render_field instructor_form.rg type="text" minlength="12" class="form-control" id="instructor-rg" placeholder="Insira o RG" %}
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="form-group">
                         <label for="instructor-cpf">CPF</label>
-                        {% render_field instructor_form.cpf type="text" class="form-control" id="instructor-cpf" placeholder="Insira o CPF" %}
+                        {% render_field instructor_form.cpf type="text" minlength="14" class="form-control" id="instructor-cpf" placeholder="Insira o CPF" %}
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="form-group">
                         <label for="instructor-phone1">Telefone 1</label>
-                        {% render_field instructor_form.primary_phone type="text" class="form-control" id="instructor-phone1" placeholder="Telefone principal" %}
+                        {% render_field instructor_form.primary_phone type="text" minlength="14" class="form-control" id="instructor-phone1" placeholder="Telefone principal" %}
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="form-group">
                         <label for="class-phone2">Telefone 2</label>
-                        {% render_field instructor_form.secondary_phone type="text" class="form-control" id="instructor-phone2" placeholder="Telefone secundário" %}
+                        {% render_field instructor_form.secondary_phone type="text" minlength="14" class="form-control" id="instructor-phone2" placeholder="Telefone secundário" %}
                     </div>
                 </div>
 
                 <div class="col-md-12 text-right mt-4">
-                    <button type="reset" onclick="clear_instructors_form()" class="btn btn-secondary">
+                    <button type="submit" type="reset" onclick="clear_instructors_form()" class="btn btn-secondary">
                         <i class="fas fa-eraser"></i> Limpar
                     </button>
-                    <button type="submit" class="btn btn-success">Salvar</button>
+                    <button type="submit" type="submit" class="btn btn-success">Salvar</button>
                 </div>
             </div>
         </form>
@@ -73,186 +73,383 @@
     <div class="card-header">
         <h5 class="card-title my-auto">Documentação</h5>
         <div class="card-tools">
-            <a href="/instructor/create" class="btn btn-success"><i class="fas fa-check"></i> Marcar como entregue</a>
+            {% if instructor.ready_documents %}
+                <a href={% url 'ready_documents' instructor.id 0 %} class="btn btn-warning"><i class="fas fa-clock"></i> Marcar como pendente</a>
+            {% else %}
+                <a href={% url 'ready_documents' instructor.id 1 %} class="btn btn-success"><i class="fas fa-check"></i> Marcar como entregue</a>
+            {% endif %}
         </div>
     </div>
     <div class="card-body">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="form-group">
-                    <label for="doc-rg">Documento de identidade</label>
-                    <div class="row">
-                        <div class="col-md-1">
-                            <div class="circle shadow mx-auto my-2" data-toggle="tooltip" data-placement="top" title="Tooltip on top"></div>
-                        </div>
-                        <div class="custom-file col-md-7">
-                            <input type="file" class="custom-file-input" id="doc-rg">
-                            <label class="custom-file-label" for="doc-rg">Insira o documento de identidade</label>
-                        </div>
-                        <div class="col-md-2">
-                            <button class="btn btn-success">
-                                <i class="fas fa-upload "></i>
-                                Enviar
-                            </button>
+        <form class="files" action={% url 'upload_instructor_document' %} method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <input type="hidden" name="instructor" id="instructor" value="{{ instructor.id }}">
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label for="doc-as">Documento de identidade</label>
+                        <div class="row">
+                            <div class="col-md-1">
+                                {% if documents.identity %}
+                                <div class="circle sent shadow mx-auto my-2" data-toggle="tooltip" data-placement="top"
+                                    title="Enviado!"></div>
+                                {% else %}
+                                <div class="circle shadow mx-auto my-2" data-toggle="tooltip" data-placement="top"
+                                    title="Pendente"></div>
+                                {% endif %}
+                            </div>
+                            <div class="custom-file col-md-7">
+                                <input type="file" name="identity" class="custom-file-input" id="doc-rg">
+                                <label class="custom-file-label" for="doc-rg">
+                                    {% if documents.identity %} {{ documents.identity.name }} {% else %} Insira o
+                                    documento de identidade {% endif %}
+                                </label>
+                            </div>
+                            <div class="col-md-4">
+                                <button type="submit" class="btn btn-success">
+                                    <i class="fas fa-upload "></i>
+                                    {% if documents.identity %}
+                                    Substituir
+                                    {% else %}
+                                    Enviar
+                                    {% endif %}
+                                </button>
+                                {% if documents.identity %}
+                                <a href="{{ documents.identity.url }}" class="btn btn-info" target="_blank">
+                                    <i class="fas fa-file"></i>
+                                    Abrir documento
+                                </a>
+                                {% endif %}
+                            </div>
                         </div>
                     </div>
+                </div>
+
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label for="doc-residencia">Comprovante de residência</label>
+                        <div class="row">
+                            <div class="col-md-1">
+                                {% if documents.residence %}
+                                <div class="circle sent shadow mx-auto my-2" data-toggle="tooltip" data-placement="top"
+                                    title="Enviado!"></div>
+                                {% else %}
+                                <div class="circle shadow mx-auto my-2" data-toggle="tooltip" data-placement="top"
+                                    title="Pendente"></div>
+                                {% endif %}
+                            </div>
+                            <div class="custom-file col-md-7">
+                                <input type="file" name="residence" class="custom-file-input" id="doc-residencia">
+                                <label class="custom-file-label" for="doc-residencia">
+                                    {% if documents.residence %}
+                                    {{ documents.residence.name }}
+                                    {% else %}
+                                    Insira o comprovante de residência
+                                    {% endif %}
+                                </label>
+                            </div>
+                            <div class="col-md-4">
+                                <button type="submit" class="btn btn-success">
+                                    <i class="fas fa-upload "></i>
+                                    {% if documents.residence %}
+                                    Substituir
+                                    {% else %}
+                                    Enviar
+                                    {% endif %}
+
+                                </button>
+                                {% if documents.residence %}
+                                <a href="{{ documents.residence.url }}" class="btn btn-info" target="_blank">
+                                    <i class="fas fa-file"></i>
+                                    Abrir documento
+                                </a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="doc-antecedentes">Antecedentes criminais</label>
+                            <div class="row">
+                                <div class="col-md-1">
+                                    {% if documents.criminal %}
+                                    <div class="circle sent shadow mx-auto my-2" data-toggle="tooltip"
+                                        data-placement="top" title="Enviado!"></div>
+                                    {% else %}
+                                    <div class="circle shadow mx-auto my-2" data-toggle="tooltip" data-placement="top"
+                                        title="Pendente"></div>
+                                    {% endif %}
+                                </div>
+                                <div class="custom-file col-md-7">
+                                    <input type="file" name="criminal" class="custom-file-input" id="doc-antecedentes">
+                                    <label class="custom-file-label" for="doc-antecedentes">
+                                        {% if documents.criminal %}
+                                        {{ documents.criminal.name }}
+                                        {% else %}
+                                        Insira o antecedentes
+                                        criminais
+
+                                        {% endif %}
+                                    </label>
+                                </div>
+                                <div class="col-md-4">
+                                    <button type="submit" class="btn btn-success">
+                                        <i class="fas fa-upload "></i>
+                                        {% if documents.criminal %}
+                                        Substituir
+                                        {% else %}
+                                        Enviar
+                                        {% endif %}
+
+                                    </button>
+                                    {% if documents.criminal %}
+                                    <a href="{{ documents.criminal.url }}" class="btn btn-info" target="_blank">
+                                        <i class="fas fa-file"></i>
+                                        Abrir documento
+                                    </a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="doc-curriculo">Currículo profissional</label>
+                            <div class="row">
+                                <div class="col-md-1">
+                                    {% if documents.curriculum %}
+                                    <div class="circle sent shadow mx-auto my-2" data-toggle="tooltip"
+                                        data-placement="top" title="Enviado!"></div>
+                                    {% else %}
+                                    <div class="circle shadow mx-auto my-2" data-toggle="tooltip" data-placement="top"
+                                        title="Pendente"></div>
+                                    {% endif %}
+                                </div>
+                                <div class="custom-file col-md-7">
+                                    <input type="file" name="curriculum" class="custom-file-input" id="doc-curriculo">
+                                    <label class="custom-file-label" for="doc-curriculo">
+                                        {% if documents.curriculum %}
+                                        {{ documents.curriculum.name }}
+                                        {% else %}
+                                        Insira o currículo
+                                        profissional
+
+                                        {% endif %}
+                                    </label>
+                                </div>
+                                <div class="col-md-4">
+                                    <button type="submit" class="btn btn-success">
+                                        <i class="fas fa-upload "></i>
+                                        {% if documents.curriculum %}
+                                        Substituir
+                                        {% else %}
+                                        Enviar
+                                        {% endif %}
+
+                                    </button>
+                                    {% if documents.curriculum %}
+                                    <a href="{{ documents.curriculum.url }}" class="btn btn-info" target="_blank">
+                                        <i class="fas fa-file"></i>
+                                        Abrir documento
+                                    </a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="doc-questionario">Questionário de entrevista</label>
+                            <div class="row">
+                                <div class="col-md-1">
+                                    {% if documents.interview_quests %}
+                                    <div class="circle sent shadow mx-auto my-2" data-toggle="tooltip"
+                                        data-placement="top" title="Enviado!"></div>
+                                    {% else %}
+                                    <div class="circle shadow mx-auto my-2" data-toggle="tooltip" data-placement="top"
+                                        title="Pendente"></div>
+                                    {% endif %}
+                                </div>
+                                <div class="custom-file col-md-7">
+                                    <input type="file" name="interview_quests" class="custom-file-input"
+                                        id="doc-questionario">
+                                    <label class="custom-file-label" for="doc-questionario">
+                                        {% if documents.interview_quests %}
+                                        {{ documents.interview_quests.name }}
+                                        {% else %}
+                                        Insira o questionário de
+                                        entrevista
+
+                                        {% endif %}
+                                    </label>
+                                </div>
+                                <div class="col-md-4">
+                                    <button type="submit" class="btn btn-success">
+                                        <i class="fas fa-upload "></i>
+                                        {% if documents.interview_quests %}
+                                        Substituir
+                                        {% else %}
+                                        Enviar
+                                        {% endif %}
+
+                                    </button>
+                                    {% if documents.interview_quests %}
+                                    <a href="{{ documents.interview_quests.url }}" class="btn btn-info" target="_blank">
+                                        <i class="fas fa-file"></i>
+                                        Abrir documento
+                                    </a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="doc-exames">Exames ou laudos médicos</label>
+                            <div class="row">
+                                <div class="col-md-1">
+                                    {% if documents.exams %}
+                                    <div class="circle sent shadow mx-auto my-2" data-toggle="tooltip"
+                                        data-placement="top" title="Enviado!"></div>
+                                    {% else %}
+                                    <div class="circle shadow mx-auto my-2" data-toggle="tooltip" data-placement="top"
+                                        title="Pendente"></div>
+                                    {% endif %}
+                                </div>
+                                <div class="custom-file col-md-7">
+                                    <input type="file" name="exams" class="custom-file-input" id="doc-exames">
+                                    <label class="custom-file-label" for="doc-exames">
+                                        {% if documents.exams %}
+                                        {{ documents.exams.name }}
+                                        {% else %}
+                                        Insira os exames ou laudos
+                                        médicos
+
+                                        {% endif %}
+                                    </label>
+                                </div>
+                                <div class="col-md-4">
+                                    <button type="submit" class="btn btn-success">
+                                        <i class="fas fa-upload "></i>
+                                        {% if documents.exams %}
+                                        Substituir
+                                        {% else %}
+                                        Enviar
+                                        {% endif %}
+
+                                    </button>
+                                    {% if documents.exams %}
+                                    <a href="{{ documents.exams.url }}" class="btn btn-info" target="_blank">
+                                        <i class="fas fa-file"></i>
+                                        Abrir documento
+                                    </a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="doc-testes">Testes de conhecimentos (se aplicado)</label>
+                            <div class="row">
+                                <div class="col-md-1">
+                                    {% if documents.tests %}
+                                    <div class="circle sent shadow mx-auto my-2" data-toggle="tooltip"
+                                        data-placement="top" title="Enviado!"></div>
+                                    {% else %}
+                                    <div class="circle shadow mx-auto my-2" data-toggle="tooltip" data-placement="top"
+                                        title="Pendente"></div>
+                                    {% endif %}
+                                </div>
+                                <div class="custom-file col-md-7">
+                                    <input type="file" name="tests" class="custom-file-input" id="doc-testes">
+                                    <label class="custom-file-label" for="doc-testes">
+                                        {% if documents.tests %}
+                                        {{ documents.tests.name }}
+                                        {% else %}
+                                        Insira os testes de
+                                        conhecimentos
+
+                                        {% endif %}
+                                    </label>
+                                </div>
+                                <div class="col-md-4">
+                                    <button type="submit" class="btn btn-success">
+                                        <i class="fas fa-upload "></i>
+                                        {% if documents.tests %}
+                                        Substituir
+                                        {% else %}
+                                        Enviar
+                                        {% endif %}
+                                    </button>
+                                    {% if documents.tests %}
+                                    <a href="{{ documents.tests.url }}" class="btn btn-info" target="_blank">
+                                        <i class="fas fa-file"></i>
+                                        Abrir documento
+                                    </a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="doc-historico">Histórico escolar</label>
+                            <div class="row">
+                                <div class="col-md-1">
+                                    {% if documents.scholar_history %}
+                                    <div class="circle sent shadow mx-auto my-2" data-toggle="tooltip"
+                                        data-placement="top" title="Enviado!"></div>
+                                    {% else %}
+                                    <div class="circle shadow mx-auto my-2" data-toggle="tooltip" data-placement="top"
+                                        title="Pendente"></div>
+                                    {% endif %}
+                                </div>
+                                <div class="custom-file col-md-7">
+                                    <input type="file" name="scholar_history" class="custom-file-input"
+                                        id="doc-historico">
+                                    <label class="custom-file-label" for="doc-historico">
+                                        {% if documents.scholar_history %}
+                                        {{ documents.scholar_history.name }}
+                                        {% else %}
+                                        Insira o histórico
+                                        escolar
+
+                                        {% endif %}
+                                    </label>
+                                </div>
+                                <div class="col-md-4">
+                                    <button type="submit" class="btn btn-success">
+                                        <i class="fas fa-upload "></i>
+                                        {% if documents.scholar_history %}
+                                        Substituir
+                                        {% else %}
+                                        Enviar
+                                        {% endif %}
+
+                                    </button>
+                                    {% if documents.scholar_history %}
+                                    <a href="{{ documents.scholar_history.url }}" class="btn btn-info" target="_blank">
+                                        <i class="fas fa-file"></i>
+                                        Abrir documento
+                                    </a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
-
-            <div class="col-md-12">
-                <div class="form-group">
-                    <label for="doc-residencia">Comprovante de residência</label>
-                    <div class="row">
-                        <div class="col-md-1">
-                            <div class="circle shadow mx-auto my-2" data-toggle="tooltip" data-placement="top" title="Tooltip on top"></div>
-                        </div>
-                        <div class="custom-file col-md-7">
-                            <input type="file" class="custom-file-input" id="doc-residencia">
-                            <label class="custom-file-label" for="doc-residencia">Insira o comprovante de
-                                residência</label>
-                        </div>
-                        <div class="col-md-2">
-                            <button class="btn btn-success">
-                                <i class="fas fa-upload "></i>
-                                Enviar
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-12">
-                    <div class="form-group">
-                        <label for="doc-antecedentes">Antecedentes criminais</label>
-                        <div class="row">
-                            <div class="col-md-1">
-                                <div class="circle shadow mx-auto my-2" data-toggle="tooltip" data-placement="top" title="Tooltip on top"></div>
-                            </div>
-                            <div class="custom-file col-md-7">
-                                <input type="file" class="custom-file-input" id="doc-antecedentes">
-                                <label class="custom-file-label" for="doc-antecedentes">Insira o antecedentes
-                                    criminais</label>
-                            </div>
-                            <div class="col-md-2">
-                                <button class="btn btn-success">
-                                    <i class="fas fa-upload "></i>
-                                    Enviar
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-12">
-                    <div class="form-group">
-                        <label for="doc-curriculo">Currículo profissional</label>
-                        <div class="row">
-                            <div class="col-md-1">
-                                <div class="circle shadow mx-auto my-2" data-toggle="tooltip" data-placement="top" title="Tooltip on top"></div>
-                            </div>
-                            <div class="custom-file col-md-7">
-                                <input type="file" class="custom-file-input" id="doc-curriculo">
-                                <label class="custom-file-label" for="doc-curriculo">Insira o currículo
-                                    profissional</label>
-                            </div>
-                            <div class="col-md-2">
-                                <button class="btn btn-success">
-                                    <i class="fas fa-upload "></i>
-                                    Enviar
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-12">
-                    <div class="form-group">
-                        <label for="doc-questionario">Questionário de entrevista</label>
-                        <div class="row">
-                            <div class="col-md-1">
-                                <div class="circle shadow mx-auto my-2" data-toggle="tooltip" data-placement="top" title="Tooltip on top"></div>
-                            </div>
-                            <div class="custom-file col-md-7">
-                                <input type="file" class="custom-file-input" id="doc-questionario">
-                                <label class="custom-file-label" for="doc-questionario">Insira o questionário de
-                                    entrevista</label>
-                            </div>
-                            <div class="col-md-2">
-                                <button class="btn btn-success">
-                                    <i class="fas fa-upload "></i>
-                                    Enviar
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-12">
-                    <div class="form-group">
-                        <label for="doc-exames">Exames ou laudos médicos</label>
-                        <div class="row">
-                            <div class="col-md-1">
-                                <div class="circle shadow mx-auto my-2" data-toggle="tooltip" data-placement="top" title="Tooltip on top"></div>
-                            </div>
-                            <div class="custom-file col-md-7">
-                                <input type="file" class="custom-file-input" id="doc-exames">
-                                <label class="custom-file-label" for="doc-exames">Insira os exames ou laudos
-                                    médicos</label>
-                            </div>
-                            <div class="col-md-2">
-                                <button class="btn btn-success">
-                                    <i class="fas fa-upload "></i>
-                                    Enviar
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-12">
-                    <div class="form-group">
-                        <label for="doc-testes">Testes de conhecimentos (se aplicado)</label>
-                        <div class="row">
-                            <div class="col-md-1">
-                                <div class="circle shadow mx-auto my-2" data-toggle="tooltip" data-placement="top" title="Tooltip on top"></div>
-                            </div>
-                            <div class="custom-file col-md-7">
-                                <input type="file" class="custom-file-input" id="doc-testes">
-                                <label class="custom-file-label" for="doc-testes">Insira os testes de
-                                    conhecimentos</label>
-                            </div>
-                            <div class="col-md-2">
-                                <button class="btn btn-success">
-                                    <i class="fas fa-upload "></i>
-                                    Enviar
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-12">
-                    <div class="form-group">
-                        <label for="doc-historico">Histórico escolar</label>
-                        <div class="row">
-                            <div class="col-md-1">
-                                <div class="circle pending shadow mx-auto my-2" data-toggle="tooltip" data-placement="top" title="Tooltip on top"></div>
-                            </div>
-                            <div class="custom-file col-md-7">
-                                <input type="file" class="custom-file-input" id="doc-historico">
-                                <label class="custom-file-label" for="doc-historico">Insira o histórico escolar</label>
-                            </div>
-                            <div class="col-md-2">
-                                <button class="btn btn-success">
-                                    <i class="fas fa-upload "></i>
-                                    Enviar
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        </div>
+        </form>
     </div>
 </div>
 {% endblock content %}

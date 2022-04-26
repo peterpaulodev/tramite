@@ -1,0 +1,19 @@
+{% include './header.html' %}
+
+<div class="content position-relative" style="top: 32%">
+    <div class="error-page">
+        <h2 class="headline text-bold"> 404</h2>
+
+        <div class="error-content my-auto">
+            <h3><i class="fas fa-exclamation-triangle text-warning"></i> Oops! Página não encontrada.</h3>
+
+            <p>
+                Você parece estar um pouco perdido... <br>
+                Clique em <a href={% url 'index' %}>retornar para a página principal</a>.
+            </p>
+        </div>
+        <!-- /.error-content -->
+    </div>
+</div>
+
+{% include './footer.html' %}

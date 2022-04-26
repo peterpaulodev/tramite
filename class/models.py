@@ -3,10 +3,10 @@ from django.db import models
 
 # Create your models here.
 class Classes(models.Model):
-    anac_id = models.IntegerField()
+    anac_id = models.CharField(max_length=255)
     name = models.CharField(max_length=255)
-    address = models.TextField()
-    zipcode = models.IntegerField()
+    address = models.CharField(max_length=255)
+    zipcode = models.CharField(max_length=255)
     number = models.IntegerField()
     neigh = models.CharField(max_length=255)
     city = models.CharField(max_length=255)
