@@ -1,0 +1,831 @@
+{% load static %}
+{% load widget_tweaks %}
+
+<title>Tramite | Aluno</title>
+
+{% include '../base/header.html' %}
+
+<body class="hold-transition login-page login-back" style="align-items: center;">
+    <div class="card card-outline card-primary col-8 my-5">
+        <div class="card-header ">
+            <a href="/accounts/login" class="btn btn-primary mr-2">
+                <i class="fas fa-arrow-left" aria-hidden="true"></i>
+                Voltar
+            </a>
+            <h3 class="text-center">
+                Seja bem-vindo! <b>{{ student.name }}</b>
+            </h3>
+
+            {% include '../base/messages.html' %}
+
+        </div>
+
+        <div class="card-body">
+            <form id="upload-docs" action={% url 'upload_student_document' %} method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <input type="hidden" name="student" value="{{ student.id }}">
+
+                <div class="row">
+                    <div class="col-md-6 text-center">
+                        <h5>Ficha de inscrição</h5>
+                        <p>
+                            <i class="fas fa-info-circle" aria-hidden="true"></i>
+                            Baixe aqui a sua ficha de inscrição! Após isso nós solicitamos que você verifique as
+                            informações, assine e anexe no botão abaixo.
+                        </p>
+                        <div class="text-center col-md-12">
+                            {% if documents.registration_form %}
+
+                                <div class="row" id="edit-registration_form">
+                                    <div class="col-md-8">
+                                        <p class="text-warning text-bold">
+                                            <i class="fas fa-clock" aria-hidden="true"></i>
+                                            {{status.registration_form_name}}
+                                        </p>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <a href="{{ documents.registration_form.url }}" class="btn btn-info" target="_blank">
+                                            <i class="fas fa-file"></i>
+                                            Abrir
+                                        </a>
+                                    </div>
+                                </div>
+
+                            {% else %}
+
+                                <a href="/media/student/{{student.id}}/ficha_cadastral_tramite.pdf" class="btn btn-success"
+                                    download>
+                                    <i class="fas fa-download" aria-hidden="true"></i>
+                                    Baixar
+                                </a>
+                                <label class="btn btn-info m-0 font-weight-normal">
+                                    <input type="file" name="registration_form" class="d-none" id="registration_form" onchange="form.submit()">
+                                    <i class="fas fa-file" aria-hidden="true"></i>
+                                    Anexar
+                                </label>
+
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-md-6 text-center">
+                        <h5>Declaração de residência</h5>
+                        <p>
+                            <i class="fas fa-info-circle" aria-hidden="true"></i>
+                            Caso o comprovante de residência esteja em nome de qualquer pessoa, o aluno deve comprovar
+                            em seu nome através dessa declaração.
+                        </p>
+                        <div class="text-center col-md-12">
+                            {% if documents.proof_of_address %}
+
+                            <div class="row" id="edit-proof_of_address">
+                                <div class="col-md-8">
+                                    <p class="text-warning text-bold">
+                                        <i class="fas fa-clock" aria-hidden="true"></i>
+                                        {{status.proof_of_address_name}}
+                                    </p>
+                                </div>
+                                <div class="col-md-4">
+                                    <a href="{{ documents.proof_of_address.url }}" class="btn btn-info" target="_blank">
+                                        <i class="fas fa-file"></i>
+                                        Abrir
+                                    </a>
+                                </div>
+                            </div>
+
+                            {% else %}
+
+                            <a href="{% static 'dist/docs/declaracao_de_residencia.pdf' %}" class="btn btn-success"
+                                download>
+                                <i class="fas fa-download" aria-hidden="true"></i>
+                                Baixar
+                            </a>
+                            <label class="btn btn-info m-0 font-weight-normal">
+                                <input name="proof_of_address" type="file" class="d-none" id="residence-upload" onchange="form.submit()">
+                                <i class="fas fa-file" aria-hidden="true"></i>
+                                Anexar
+                            </label>
+
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+            <div class="divisor my-3">
+                <ul class="messages mt-3">
+                    <li role="alert" class="alert alert-info">
+                        <i class="fas fa-info-circle mr-2"></i>
+                        Atenção: Dados diferentes do RG e do CPF invalidam os atestados. Credenciais aeroportuárias
+                        de área
+                        restrita (R) são válidas e excluem todas as certidões de antecedentes criminais. ENVIAR
+                        CÓPIA
+                        LEGÍVEL E COLORIDA (FRENTE E VERSO).
+                    </li>
+                </ul>
+
+                <form class="files mt-2" action={% url 'upload_student_document' %} method="POST"
+                    enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    <input type="hidden" name="student" value="{{ student.id }}">
+                    <div class="row">
+                        <!-- RG -->
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="doc-as">Documento de identidade (RG/CNH e CPF)</label>
+                                {% if documents.identity %}
+                                <div class="row" id="edit-identity">
+                                    <div class="col-md-10">
+                                        <p class="text-warning text-bold">
+                                            <i class="fas fa-clock" aria-hidden="true"></i>
+                                            {{status.identity_name}}
+                                        </p>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <button class="btn btn-info mb-3"
+                                            onclick="edit_student_document(event, 'identity')">
+                                            <i class="fas fa-eye"></i>
+                                            Visualizar
+                                        </button>
+                                    </div>
+                                </div>
+                                {% endif %}
+                                <div class="row" {% if documents.identity %} style=" display:none " {% endif %}
+                                    id="div-identity">
+                                    <div class="col-md-12">
+                                        <p>
+                                            <i class="fas fa-info-circle" aria-hidden="true"></i>
+                                            Caso o número de CPF não esteja informado no RG, por favor, adicione uma
+                                            cópia do CPF ao mesmo arquivo.
+                                        </p>
+                                    </div>
+                                    <div class="col-md-1">
+                                        {% if documents.identity %}
+                                        <div class="circle sent shadow mx-auto my-2" data-toggle="tooltip"
+                                            data-placement="top" title="Enviado!"></div>
+                                        {% else %}
+                                        <div class="circle shadow mx-auto my-2" data-toggle="tooltip"
+                                            data-placement="top" title="Pendente"></div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="custom-file col-md-7">
+                                        <input type="file" name="identity" class="custom-file-input" id="doc-rg">
+                                        <label class="custom-file-label" for="doc-rg">
+                                            {% if documents.identity %} {{ documents.identity.name }} {% else %}
+                                            Insira
+                                            o
+                                            documento de identidade {% endif %}
+                                        </label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <button type="submit" class="btn btn-success">
+                                            <i class="fas fa-upload "></i>
+                                            {% if documents.identity %}
+                                            Substituir
+                                            {% else %}
+                                            Enviar
+                                            {% endif %}
+                                        </button>
+                                        {% if documents.identity %}
+                                        <a href="{{ documents.identity.url }}" class="btn btn-info" target="_blank">
+                                            <i class="fas fa-file"></i>
+                                            Abrir
+                                        </a>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- proof_of_address -->
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="doc-proof_of_address">Comprovante de residência</label>
+                                {% if documents.proof_of_address %}
+                                <div class="row" id="edit-proof_of_address">
+                                    <div class="col-md-10">
+                                        <p class="text-warning text-bold">
+                                            <i class="fas fa-clock" aria-hidden="true"></i>
+                                            {{status.proof_of_address_name}}
+                                        </p>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <button class="btn btn-info mb-3"
+                                            onclick="edit_student_document(event, 'proof_of_address')">
+                                            <i class="fas fa-eye"></i>
+                                            Visualizar
+                                        </button>
+                                    </div>
+                                </div>
+                                {% endif %}
+                                <div class="row" {% if documents.proof_of_address %} style=" display:none " {% endif %}
+                                    id="div-proof_of_address">
+                                    <div class="col-md-12">
+                                        <p>
+                                            <i class="fas fa-info-circle" aria-hidden="true"></i>
+                                            Comprovantes aceitos: conta de luz, água, gás ou telefone
+                                            correspondentes ao último mês ou contrato de locação devidamente
+                                            assinado, onde figure como locatário o aluno.
+                                        </p>
+                                    </div>
+                                    <div class="col-md-1">
+                                        {% if documents.proof_of_address %}
+                                        <div class="circle sent shadow mx-auto my-2" data-toggle="tooltip"
+                                            data-placement="top" title="Enviado!"></div>
+                                        {% else %}
+                                        <div class="circle shadow mx-auto my-2" data-toggle="tooltip"
+                                            data-placement="top" title="Pendente"></div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="custom-file col-md-7">
+                                        <input type="file" name="proof_of_address" class="custom-file-input"
+                                            id="doc-proof_of_address">
+                                        <label class="custom-file-label" for="doc-proof_of_address">
+                                            {% if documents.proof_of_address %}
+                                            {{ documents.proof_of_address.name }}
+                                            {% else %}
+                                            Insira o comprovante de residência
+                                            {% endif %}
+                                        </label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <button type="submit" class="btn btn-success">
+                                            <i class="fas fa-upload "></i>
+                                            {% if documents.proof_of_address %}
+                                            Substituir
+                                            {% else %}
+                                            Enviar
+                                            {% endif %}
+
+                                        </button>
+                                        {% if documents.proof_of_address %}
+                                        <a href="{{ documents.proof_of_address.url }}" class="btn btn-info"
+                                            target="_blank">
+                                            <i class="fas fa-file"></i>
+                                            Abrir
+                                        </a>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- criminal -->
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="doc-antecedentes">Antecedentes criminais</label>
+                                {% if documents.criminal %}
+                                <div class="row" id="edit-criminal">
+                                    <div class="col-md-10">
+                                        <p class="text-warning text-bold">
+                                            <i class="fas fa-clock" aria-hidden="true"></i>
+                                            {{status.criminal_name}}
+                                        </p>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <button class="btn btn-info mb-3"
+                                            onclick="edit_student_document(event, 'criminal')">
+                                            <i class="fas fa-eye"></i>
+                                            Visualizar
+                                        </button>
+                                    </div>
+                                </div>
+                                {% endif %}
+                                <div class="row" {% if documents.criminal %} style=" display:none " {% endif %}
+                                    id="div-criminal">
+                                    <div class="col-md-12">
+                                        <p>
+                                            <i class="fas fa-info-circle" aria-hidden="true"></i>
+                                            Antecedentes Criminais:
+                                            serão retirados na ficha para obtenção de antecedentes CRIMINAIS que
+                                            se encontra abaixo.
+                                            <ul>
+                                                <li>Certidão Criminal do Tribunal de Justiça Estadual</li>
+                                                <li>Certidão de Distribuição para Fins Gerais do Tribunal de Justiça
+                                                    Federal</li>
+                                            </ul>
+                                        </p>
+                                    </div>
+                                    <div class="col-md-1">
+                                        {% if documents.criminal %}
+                                        <div class="circle sent shadow mx-auto my-2" data-toggle="tooltip"
+                                            data-placement="top" title="Enviado!"></div>
+                                        {% else %}
+                                        <div class="circle shadow mx-auto my-2" data-toggle="tooltip"
+                                            data-placement="top" title="Pendente"></div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="custom-file col-md-7">
+                                        <input type="file" name="criminal" class="custom-file-input"
+                                            id="doc-antecedentes">
+                                        <label class="custom-file-label" for="doc-antecedentes">
+                                            {% if documents.criminal %}
+                                            {{ documents.criminal.name }}
+                                            {% else %}
+                                            Insira os antecedentes
+                                            criminais
+
+                                            {% endif %}
+                                        </label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <button type="submit" class="btn btn-success">
+                                            <i class="fas fa-upload "></i>
+                                            {% if documents.criminal %}
+                                            Substituir
+                                            {% else %}
+                                            Enviar
+                                            {% endif %}
+
+                                        </button>
+                                        {% if documents.criminal %}
+                                        <a href="{{ documents.criminal.url }}" class="btn btn-info" target="_blank">
+                                            <i class="fas fa-file"></i>
+                                            Abrir
+                                        </a>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- work_card -->
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="doc-work_card">Cópia da carteira de trabalho</label>
+                                {% if documents.work_card %}
+                                <div class="row" id="edit-work_card">
+                                    <div class="col-md-10">
+                                        <p class="text-warning text-bold">
+                                            <i class="fas fa-clock" aria-hidden="true"></i>
+                                            {{status.work_card_name}}
+                                        </p>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <button class="btn btn-info mb-3"
+                                            onclick="edit_student_document(event, 'work_card')">
+                                            <i class="fas fa-eye"></i>
+                                            Visualizar
+                                        </button>
+                                    </div>
+                                </div>
+                                {% endif %}
+                                <div class="row" {% if documents.work_card %} style=" display:none " {% endif %}
+                                    id="div-work_card">
+                                    <div class="col-md-12">
+                                        <p>
+                                            <i class="fas fa-info-circle" aria-hidden="true"></i>
+                                            Somente páginas que comprovem experiência profissional mínima de
+                                            06(seis) meses no sistema de aviação civil
+                                        </p>
+                                    </div>
+                                    <div class="col-md-1">
+                                        {% if documents.work_card %}
+                                        <div class="circle sent shadow mx-auto my-2" data-toggle="tooltip"
+                                            data-placement="top" title="Enviado!"></div>
+                                        {% else %}
+                                        <div class="circle shadow mx-auto my-2" data-toggle="tooltip"
+                                            data-placement="top" title="Pendente"></div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="custom-file col-md-7">
+                                        <input type="file" name="work_card" class="custom-file-input"
+                                            id="doc-work_card">
+                                        <label class="custom-file-label" for="doc-work_card">
+                                            {% if documents.work_card %}
+                                            {{ documents.work_card.name }}
+                                            {% else %}
+                                            Insira a cópia da carteira de trabalho
+                                            {% endif %}
+                                        </label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <button type="submit" class="btn btn-success">
+                                            <i class="fas fa-upload "></i>
+                                            {% if documents.work_card %}
+                                            Substituir
+                                            {% else %}
+                                            Enviar
+                                            {% endif %}
+
+                                        </button>
+                                        {% if documents.work_card %}
+                                        <a href="{{ documents.work_card.url }}" class="btn btn-info" target="_blank">
+                                            <i class="fas fa-file"></i>
+                                            Abrir
+                                        </a>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- basic avsec certificate -->
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="doc-basic_avsec_certificate">Certificado do curso Básico Avsec</label>
+                                {% if documents.basic_avsec_certificate %}
+                                <div class="row" id="edit-basic_avsec_certificate">
+                                    <div class="col-md-10">
+                                        <p class="text-warning text-bold">
+                                            <i class="fas fa-clock" aria-hidden="true"></i>
+                                            {{status.basic_avsec_certificate_name}}
+                                        </p>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <button class="btn btn-info mb-3"
+                                            onclick="edit_student_document(event, 'basic_avsec_certificate')">
+                                            <i class="fas fa-eye"></i>
+                                            Visualizar
+                                        </button>
+                                    </div>
+                                </div>
+                                {% endif %}
+                                <div class="row" {% if documents.basic_avsec_certificate %} style=" display:none "
+                                    {% endif %} id="div-basic_avsec_certificate">
+                                    <div class="col-md-1">
+                                        {% if documents.basic_avsec_certificate %}
+                                        <div class="circle sent shadow mx-auto my-2" data-toggle="tooltip"
+                                            data-placement="top" title="Enviado!"></div>
+                                        {% else %}
+                                        <div class="circle shadow mx-auto my-2" data-toggle="tooltip"
+                                            data-placement="top" title="Pendente"></div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="custom-file col-md-7">
+                                        <input type="file" name="basic_avsec_certificate" class="custom-file-input"
+                                            id="doc-basic_avsec_certificate">
+                                        <label class="custom-file-label" for="doc-basic_avsec_certificate">
+                                            {% if documents.basic_avsec_certificate %}
+                                            {{ documents.basic_avsec_certificate.name }}
+                                            {% else %}
+                                            Insira o certificado do curso Básico Avsec
+                                            {% endif %}
+                                        </label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <button type="submit" class="btn btn-success">
+                                            <i class="fas fa-upload "></i>
+                                            {% if documents.basic_avsec_certificate %}
+                                            Substituir
+                                            {% else %}
+                                            Enviar
+                                            {% endif %}
+
+                                        </button>
+                                        {% if documents.basic_avsec_certificate %}
+                                        <a href="{{ documents.basic_avsec_certificate.url }}" class="btn btn-info"
+                                            target="_blank">
+                                            <i class="fas fa-file"></i>
+                                            Abrir
+                                        </a>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- cnv -->
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="doc-cnv">Carteira Nacional de Vigilante (CNV) </label>
+                                {% if documents.cnv %}
+                                <div class="row" id="edit-cnv">
+                                    <div class="col-md-10">
+                                        <p class="text-warning text-bold">
+                                            <i class="fas fa-clock" aria-hidden="true"></i>
+                                            {{status.cnv_name}}
+                                        </p>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <button class="btn btn-info mb-3" onclick="edit_student_document(event, 'cnv')">
+                                            <i class="fas fa-eye"></i>
+                                            Visualizar
+                                        </button>
+                                    </div>
+                                </div>
+                                {% endif %}
+                                <div class="row" {% if documents.cnv %} style=" display:none " {% endif %} id="div-cnv">
+                                    <div class="col-md-12">
+                                        <p>
+                                            <i class="fas fa-info-circle" aria-hidden="true"></i>
+                                            Também pode ser anexado o Certificado de
+                                            Vigilante
+                                            Habilitação de piloto ou comissaria
+                                        </p>
+                                    </div>
+                                    <div class="col-md-1">
+                                        {% if documents.cnv %}
+                                        <div class="circle sent shadow mx-auto my-2" data-toggle="tooltip"
+                                            data-placement="top" title="Enviado!"></div>
+                                        {% else %}
+                                        <div class="circle shadow mx-auto my-2" data-toggle="tooltip"
+                                            data-placement="top" title="Pendente"></div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="custom-file col-md-7">
+                                        <input type="file" name="cnv" class="custom-file-input" id="doc-cnv">
+                                        <label class="custom-file-label" for="doc-cnv">
+                                            {% if documents.cnv %}
+                                            {{ documents.cnv.name }}
+                                            {% else %}
+                                            Insira a Carteira Nacional de Vigilante (CNV)
+                                            {% endif %}
+                                        </label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <button type="submit" class="btn btn-success">
+                                            <i class="fas fa-upload "></i>
+                                            {% if documents.cnv %}
+                                            Substituir
+                                            {% else %}
+                                            Enviar
+                                            {% endif %}
+                                        </button>
+                                        {% if documents.cnv %}
+                                        <a href="{{ documents.cnv.url }}" class="btn btn-info" target="_blank">
+                                            <i class="fas fa-file"></i>
+                                            Abrir
+                                        </a>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- forwarding_in_service -->
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="doc-forwarding_in_service">Carta de encaminhamento em serviço</label>
+                                {% if documents.forwarding_in_service %}
+                                <div class="row" id="edit-forwarding_in_service">
+                                    <div class="col-md-10">
+                                        <p class="text-warning text-bold">
+                                            <i class="fas fa-clock" aria-hidden="true"></i>
+                                            {{status.forwarding_in_service_name}}
+                                        </p>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <button class="btn btn-info mb-3"
+                                            onclick="edit_student_document(event, 'forwarding_in_service')">
+                                            <i class="fas fa-eye"></i>
+                                            Visualizar
+                                        </button>
+                                    </div>
+                                </div>
+                                {% endif %}
+                                <div class="row" {% if documents.forwarding_in_service %} style=" display:none "
+                                    {% endif %} id="div-forwarding_in_service">
+                                    <div class="col-md-1">
+                                        {% if documents.forwarding_in_service %}
+                                        <div class="circle sent shadow mx-auto my-2" data-toggle="tooltip"
+                                            data-placement="top" title="Enviado!"></div>
+                                        {% else %}
+                                        <div class="circle shadow mx-auto my-2" data-toggle="tooltip"
+                                            data-placement="top" title="Pendente"></div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="custom-file col-md-7">
+                                        <input type="file" name="forwarding_in_service" class="custom-file-input"
+                                            id="doc-forwarding_in_service">
+                                        <label class="custom-file-label" for="doc-forwarding_in_service">
+                                            {% if documents.forwarding_in_service %}
+                                            {{ documents.forwarding_in_service.name }}
+                                            {% else %}
+                                            Insira a carta de encaminhamento em serviço
+                                            {% endif %}
+                                        </label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <button type="submit" class="btn btn-success">
+                                            <i class="fas fa-upload "></i>
+                                            {% if documents.forwarding_in_service %}
+                                            Substituir
+                                            {% else %}
+                                            Enviar
+                                            {% endif %}
+
+                                        </button>
+                                        {% if documents.forwarding_in_service %}
+                                        <a href="{{ documents.forwarding_in_service.url }}" class="btn btn-info"
+                                            target="_blank">
+                                            <i class="fas fa-file"></i>
+                                            Abrir
+                                        </a>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- avsec certicate -->
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="doc-avsec_certificate">Certificado de formação Avsec</label>
+                                {% if documents.avsec_certificate %}
+                                <div class="row" id="edit-avsec_certificate">
+                                    <div class="col-md-10">
+                                        <p class="text-warning text-bold">
+                                            <i class="fas fa-clock" aria-hidden="true"></i>
+                                            {{status.avsec_certificate_name}}
+                                        </p>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <button class="btn btn-info mb-3"
+                                            onclick="edit_student_document(event, 'avsec_certificate')">
+                                            <i class="fas fa-eye"></i>
+                                            Visualizar
+                                        </button>
+                                    </div>
+                                </div>
+                                {% endif %}
+                                <div class="row" {% if documents.avsec_certificate %} style=" display:none " {% endif %}
+                                    id="div-avsec_certificate">
+                                    <div class="col-md-1">
+                                        {% if documents.avsec_certificate %}
+                                        <div class="circle sent shadow mx-auto my-2" data-toggle="tooltip"
+                                            data-placement="top" title="Enviado!"></div>
+                                        {% else %}
+                                        <div class="circle shadow mx-auto my-2" data-toggle="tooltip"
+                                            data-placement="top" title="Pendente"></div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="custom-file col-md-7">
+                                        <input type="file" name="avsec_certificate" class="custom-file-input"
+                                            id="doc-avsec_certificate">
+                                        <label class="custom-file-label" for="doc-avsec_certificate">
+                                            {% if documents.avsec_certificate %}
+                                            {{ documents.avsec_certificate.name }}
+                                            {% else %}
+                                            Insira o certificado de formação Avsec
+                                            {% endif %}
+                                        </label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <button type="submit" class="btn btn-success">
+                                            <i class="fas fa-upload "></i>
+                                            {% if documents.avsec_certificate %}
+                                            Substituir
+                                            {% else %}
+                                            Enviar
+                                            {% endif %}
+                                        </button>
+                                        {% if documents.avsec_certificate %}
+                                        <a href="{{ documents.avsec_certificate.url }}" class="btn btn-info"
+                                            target="_blank">
+                                            <i class="fas fa-file"></i>
+                                            Abrir
+                                        </a>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- high school -->
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="doc-certified_high_school">Comprovante de conclusão de nível médio</label>
+                                {% if documents.certified_high_school %}
+                                <div class="row" id="edit-certified_high_school">
+                                    <div class="col-md-10">
+                                        <p class="text-warning text-bold">
+                                            <i class="fas fa-clock" aria-hidden="true"></i>
+                                            {{status.certified_high_school_name}}
+                                        </p>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <button class="btn btn-info mb-3"
+                                            onclick="edit_student_document(event, 'certified_high_school')">
+                                            <i class="fas fa-eye"></i>
+                                            Visualizar
+                                        </button>
+                                    </div>
+                                </div>
+                                {% endif %}
+                                <div class="row" {% if documents.certified_high_school %} style=" display:none "
+                                    {% endif %} id="div-certified_high_school">
+                                    <div class="col-md-1">
+                                        {% if documents.certified_high_school %}
+                                        <div class="circle sent shadow mx-auto my-2" data-toggle="tooltip"
+                                            data-placement="top" title="Enviado!"></div>
+                                        {% else %}
+                                        <div class="circle shadow mx-auto my-2" data-toggle="tooltip"
+                                            data-placement="top" title="Pendente"></div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="custom-file col-md-7">
+                                        <input type="file" name="certified_high_school" class="custom-file-input"
+                                            id="doc-certified_high_school">
+                                        <label class="custom-file-label" for="doc-certified_high_school">
+                                            {% if documents.certified_high_school %}
+                                            {{ documents.certified_high_school.name }}
+                                            {% else %}
+                                            Insira o comprovante de conclusão de nível médio
+                                            {% endif %}
+                                        </label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <button type="submit" class="btn btn-success">
+                                            <i class="fas fa-upload "></i>
+                                            {% if documents.certified_high_school %}
+                                            Substituir
+                                            {% else %}
+                                            Enviar
+                                            {% endif %}
+
+                                        </button>
+                                        {% if documents.certified_high_school %}
+                                        <a href="{{ documents.certified_high_school.url }}" class="btn btn-info"
+                                            target="_blank">
+                                            <i class="fas fa-file"></i>
+                                            Abrir
+                                        </a>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- pilot_license -->
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="doc-pilot_license">Habilitação de piloto ou comissaria </label>
+                                {% if documents.pilot_license %}
+                                <div class="row" id="edit-pilot_license">
+                                    <div class="col-md-10">
+                                        <p class="text-warning text-bold">
+                                            <i class="fas fa-clock" aria-hidden="true"></i>
+                                            {{status.pilot_license_name}}
+                                        </p>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <button class="btn btn-info mb-3"
+                                            onclick="edit_student_document(event, 'pilot_license')">
+                                            <i class="fas fa-eye"></i>
+                                            Visualizar
+                                        </button>
+                                    </div>
+                                </div>
+                                {% endif %}
+                                <div class="row" {% if documents.pilot_license %} style=" display:none " {% endif %}
+                                    id="div-pilot_license">
+                                    <div class="col-md-1">
+                                        {% if documents.pilot_license %}
+                                        <div class="circle sent shadow mx-auto my-2" data-toggle="tooltip"
+                                            data-placement="top" title="Enviado!"></div>
+                                        {% else %}
+                                        <div class="circle shadow mx-auto my-2" data-toggle="tooltip"
+                                            data-placement="top" title="Pendente"></div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="custom-file col-md-7">
+                                        <input type="file" name="pilot_license" class="custom-file-input"
+                                            id="doc-pilot_license">
+                                        <label class="custom-file-label" for="doc-pilot_license">
+                                            {% if documents.pilot_license %}
+                                            {{ documents.pilot_license.name }}
+                                            {% else %}
+                                            Insira a habilitação de piloto ou comissaria
+                                            {% endif %}
+                                        </label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <button type="submit" class="btn btn-success">
+                                            <i class="fas fa-upload "></i>
+                                            {% if documents.pilot_license %}
+                                            Substituir
+                                            {% else %}
+                                            Enviar
+                                            {% endif %}
+
+                                        </button>
+                                        {% if documents.pilot_license %}
+                                        <a href="{{ documents.pilot_license.url }}" class="btn btn-info"
+                                            target="_blank">
+                                            <i class="fas fa-file"></i>
+                                            Abrir
+                                        </a>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="card-footer text-center">
+            <!-- /.col -->
+            <p>
+                Seu cadastro será liberado quando os documentos forem aprovados.
+            </p>
+            <!-- /.col -->
+        </div>
+    </div>
+</body>
+
+{% include '../base/footer.html' %}
+<script src="{% static 'student/js/student.js' %}"></script>

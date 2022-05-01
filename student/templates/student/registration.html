@@ -1,0 +1,244 @@
+{% load static %}
+{% load widget_tweaks %}
+
+<title>Tramite | Aluno</title>
+
+{% include '../base/header.html' %}
+
+<body class="hold-transition login-page login-back " style="align-items: center;">
+    <div class="card card-outline card-primary col-8 my-5">
+
+        <div class="card-header">
+            <h3>
+                <a href="/accounts/login" class="btn btn-primary" style="margin-right: 153px;">
+                    <i class="fas fa-arrow-left" aria-hidden="true"></i>
+                    Voltar
+                </a>
+                Seja um aluno da <b>Trâmite</b>
+            </h3>
+        </div>
+        <form method="POST" action={% url 'registration' %}>
+            <div class="card-body">
+                <p class="login-box-msg">Preencha o formulário abaixo</p>
+
+                {% include '../base/messages.html' %}
+
+                {% csrf_token %}
+                <section class="row divisor" id="class">
+                    <h5 class="col-md-12 mb-4"> <i class="fas fa-pen pr-2" aria-hidden="true"></i> Selecione o curso
+                        para qual deseja se inscrever</h5>
+
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="student-class">Curso</label>
+                            {% render_field student_form.classes class="form-control" id="student-class" %}
+                        </div>
+                    </div>
+                </section>
+
+                <section class="row divisor mt-3" id="personal">
+                    <h5 class="col-md-12 mb-4"> <i class="fas fa-user pr-2" aria-hidden="true"></i> Informações pessoais
+                    </h5>
+
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="student-name">Nome completo</label>
+                            {% render_field student_form.name type="text" class="form-control" id="student-name" placeholder="Insira o nome completo" %}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="student-name">Data de nascimento</label>
+                            {% render_field student_form.birth_date type="text" class="form-control" id="student-birth_date" placeholder="Insira a Data de nascimento" %}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="student-name">Orgão emissor</label>
+                            {% render_field student_form.issuing_agency type="text" class="form-control" id="student-issuing_agency" placeholder="Insira o orgão emissor" %}
+                        </div>
+                    </div>
+                    <!--  -->
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="student-name">CPF</label>
+                            {% render_field student_form.cpf type="text" class="form-control" id="student-cpf" placeholder="Insira o cpf" %}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="student-name">RG</label>
+                            {% render_field student_form.rg type="text" class="form-control" id="student-rg" placeholder="Insira o RG" %}
+                        </div>
+                    </div>
+                    <!--  -->
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="student-name">Naturalidade</label>
+                            {% render_field student_form.naturalness type="text" class="form-control" id="student-naturalness" placeholder="Insira a naturalidade" %}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="student-name">Nacionalidade</label>
+                            {% render_field student_form.nationality type="text" class="form-control" id="student-nationality" placeholder="Insira o nacionalidade" %}
+                        </div>
+                    </div>
+                    <!--  -->
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="student-name">Nome da mãe</label>
+                            {% render_field student_form.mother_name type="text" class="form-control" id="student-mother" placeholder="Insira o nome da mãe" %}
+                        </div>
+                    </div>
+                    <!--  -->
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="student-name">Nome do pai</label>
+                            {% render_field student_form.father_name type="text" class="form-control" id="student-father" placeholder="Insira o nome do pai" %}
+                        </div>
+                    </div>
+                    <!--  -->
+                </section>
+                <section class="row divisor mt-3" id="contacts">
+                    <h5 class="col-md-12 mb-4"> <i class="fas fa-envelope pr-2" aria-hidden="true"></i> Contato</h5>
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="student-name">Email</label>
+                            {% render_field student_form.email type="text" class="form-control" id="student-email" placeholder="Insira o email" %}
+                        </div>
+                    </div>
+                    <!--  -->
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="student-name">Telefone principal</label>
+                            {% render_field student_form.primary_phone type="text" class="form-control" id="student-primary_phone" placeholder="Insira o Telefone" %}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="student-name">Telefone secundário</label>
+                            {% render_field student_form.secondary_phone type="text" class="form-control" id="student-secondary_phone" placeholder="Insira o Telefone" %}
+                        </div>
+                    </div>
+                    <!--  -->
+                </section>
+                <section class="row divisor mt-3" id="professional">
+                    <h5 class="col-md-12 mb-4"> <i class="fas fa-briefcase pr-2"></i> Profissional</h5>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="student-name">Escolaridade</label>
+                            {% render_field student_form.scholarity type="text" class="form-control" id="student-scholarity" placeholder="Insira a naturalidade" %}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="student-name">Nome da empresa que trabalha</label>
+                            {% render_field student_form.working_company_name type="text" class="form-control" id="student-working_company_name" placeholder="Insira o nome da empresa que trabalha" %}
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <div class="form-check">
+                                {% render_field student_form.aviation_work class="form-check-input" id="student-aviation_work" type="checkbox" %}
+                                <label class="form-check-label">Trabalha na aviação?</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <div class="form-check">
+                                {% render_field student_form.avsec_work class="form-check-input" id="student-avsec_work" type="checkbox" %}
+                                <label class="form-check-label">Trabalha com segurança AVSEC?</label>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="row divisor mt-3" id="address">
+                    <h5 class="col-md-12 mb-4"> <i class="fas fa-map-marked-alt pr-2"></i> Endereço</h5>
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="student-zipcode">CEP</label>
+                            <div class="input-group">
+                                {% render_field student_form.zipcode type="text" class="form-control" id="student-zipcode" placeholder="Insira o CEP" %}
+                                <span class="input-group-append">
+                                    <button class="btn btn-primary" id="search-zipcode">
+                                        <i class="fas fa-search"></i>
+                                    </button>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="form-group">
+                            <label for="student-address">Endereço</label>
+                            {% render_field student_form.address type="text" class="form-control" id="student-address" placeholder="Insira o nome da rua" %}
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="student-neighbourhood">Bairro</label>
+                            {% render_field student_form.neigh type="text" class="form-control" id="student-neighbourhood" placeholder="Insira o bairro" %}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="student-city">Cidade</label>
+                            {% render_field student_form.city type="text" class="form-control" id="student-city" placeholder="Insira a cidade" %}
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="student-number">UF</label>
+                            {% render_field student_form.uf class="form-control" id="student-uf" placeholder="UF" %}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="student-number">Número</label>
+                            {% render_field student_form.number type="number" class="form-control" id="student-number" placeholder="Insira o número" %}
+                        </div>
+                    </div>
+                </section>
+
+                <section class="row divisor mt-3" id="password">
+
+                    <p class="col-md-12 text-center">Você poderá utilizar essa senha para retornar o cadastro de onde
+                        você
+                        parou.
+                    </p>
+
+                    <div class="col-md-12">
+                        <div class="form-group col-5 mx-auto">
+                            <label for="student-name">Senha</label>
+                            {% render_field student_form.password type="password" class="form-control" id="student-password" placeholder="Insira uma senha" %}
+                        </div>
+                    </div>
+                </section>
+            </div>
+            <div class="card-footer">
+                <!-- /.col -->
+                <div class="col-12">
+                    <button type="submit" class="btn btn-primary btn-block">Cadastre-se</button>
+                </div>
+                <!-- /.col -->
+            </div>
+        </form>
+
+        <!-- <p class="mb-1">
+            <a href="forgot-password.html">I forgot my password</a>
+        </p>
+        <p class="mb-0">
+            <a href="register.html" class="text-center">Register a new membership</a>
+        </p> -->
+    </div>
+    <!-- /.card-body -->
+    </div>
+</body>
+
+{% include '../base/footer.html' %}
+<script src="{% static 'student/js/student.js' %}"></script>

@@ -34,3 +34,43 @@ ul.messages li {
     border-color: #f5c6cb;
 }
 
+input[type=checkbox] {
+    transform: scale(1.5);
+}
+
+.login-back {
+    background: url(../../img/back.webp) no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+.login-back::before {
+    content: '';
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100%;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(43, 80, 142, 0.5);
+    opacity: 1;
+}
+
+.custom-file-input:lang(en)~.custom-file-label::after {
+    content: "Selecione" !important;
+}
+
+.circle {
+    width: 20px;
+    height: 20px;
+    border-radius: 20px;
+    margin: 0;
+    background: #ffc107;
+    cursor: pointer;
+}
+
+.circle.sent {
+    background: #28a745;
+}

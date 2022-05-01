@@ -1,0 +1,73 @@
+{% extends 'main/index.html' %}
+{% load static %}
+
+{% block title %}Alunos{% endblock %}
+{% block page_title %}Alunos{% endblock %}
+
+{% block content %}
+<div class="card card-primary card-outline">
+    <div class="card-header">
+        <h5 class="card-title my-auto">Listagem de alunos</h5>
+        <div class="card-tools">
+            <!-- <a href="create" class="btn btn-primary"><i class="fas fa-plus"></i> Novo</a> -->
+        </div>
+    </div>
+    <div class="card-body">
+        <table id="student-list" class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Aluno</th>
+                    <th>Curso</th>
+                    <th>Email</th>
+                    <th>Trabalha na aviação</th>
+                    <th>Trabalha na AVSEC</th>
+                    <th>Documentação</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for student in students %}
+                <tr>
+                    <td>
+                        <i class="fas fa-user mr-1"></i>
+                        {{ student.name | title }}
+                    </td>
+                    <td>{{ student.in_class }}</td>
+                    <td>{{ student.email }}</td>
+                    <td>{{ student.aviation_work }}</td>
+                    <td>{{ student.avsec_work }}</td>
+                    <td class="text-center">
+                        {% if student.ready_documents %}
+                            <i class="fas fa-check text-success"></i> Entregue
+                        {% else %}
+                            <i class="fas fa-clock text-warning"></i> Em análise
+                        {% endif %}
+                    </td>
+                    <td class="text-center">
+                        <a href="edit/{{ student.id }}" title="Editar Instrutor" data-toggle="tooltip" data-placement="top">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th>Aluno</th>
+                    <th>Curso</th>
+                    <th>Email</th>
+                    <th>Trabalha na aviação</th>
+                    <th>Trabalha na AVSEC</th>
+                    <th>Documentação</th>
+                    <th>Ações</th>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>
+{% endblock content %}
+
+{% block script %}
+    <script src="{% static 'student/js/student.js' %}"></script>
+{% endblock script %}
+

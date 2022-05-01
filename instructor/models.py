@@ -10,7 +10,6 @@ class Instructor(models.Model):
     rg = models.CharField(max_length=100)
     primary_phone = models.CharField(max_length=100)
     secondary_phone = models.CharField(max_length=100)
-    secondary_phone = models.CharField(max_length=100)
     ready_documents = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

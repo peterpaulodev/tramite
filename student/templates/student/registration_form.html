@@ -1,0 +1,105 @@
+{% load static %}
+
+<html>
+
+<head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+
+    <style>
+        * {
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        table,
+        th,
+        td {
+            border: 1px solid black;
+        }
+
+        table {
+            width: 100%;
+        }
+
+        .box {
+            border: 1px solid black;
+            padding: 15px;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        h3 {
+            text-decoration: underline;
+        }
+
+        span {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        p {
+            font-size: 18.76px;
+        }
+    </style>
+</head>
+
+<body>
+    <img src="data:image/jpeg;base64,{{logo}}" alt="tramite logo">
+    <br>
+    <h2 class="text-center">FICHA DE MATRÍCULA EM CURSO AVSEC</h2>
+
+    <div class="box">
+        <p><b>Nome completo do aluno:</b> {{ student.name }}</p>
+        <p><b>Curso AVSEC a ser realizado:</b> {{ student.classes }}</p>
+
+        <br>
+        <h3 class="text-center">DADOS PESSOAIS</h3>
+
+        <p> <b>Data de nascimento:</b> {{ student.birth_date|date:"d/m/Y" }}</p>
+
+        <p> <b>Naturalidade:</b> {{ student.naturalness }} | <b>Nacionalidade:</b> {{ student.nationality }}</p>
+
+        <p> <b>Nome do pai:</b> {{ student.father_name }}</p>
+
+        <p> <b>Nome do mãe:</b> {{ student.mother_name }}</p>
+
+        <p> <b>Numero do RG:</b> {{ student.rg }} | <b>Orgão expedidor:</b> {{ student.issuing_agency }}</p>
+
+        <p> <b>CPF:</b> {{ student.cpf }}</p>
+
+        <p> <b>Trabalha na aviação?</b> {{ student.aviation_work|yesno:"Sim,Não,-" }}</p>
+
+        <p> <b>Trabalha na Segurança AVSEC?</b> {{ student.avsec_work|yesno:"Sim,Não,-" }}</p>
+
+        <p> <b>Nome da empresa em que trabalha:</b> {{ student.working_company_name }}</p>
+
+        <br>
+        <h3 class="text-center">CONTATOS</h3>
+
+        <p> <b>Endereço residencial:</b> {{ student.address }}</p>
+        <p> <b>Bairro:</b> {{ student.neigh }}</p>
+        <p> <b>Cidade:</b> {{ student.city }} | <b>UF:</b> {{ student.uf }} | <b>CEP: </b> {{ student.zipcode }}</p>
+        <p> <b>Telefone:</b> {{ student.primary_phone }} / {{ student.secondary_phone }}</p>
+        <p> <b>Email:</b> {{ student.email }}</p>
+
+        <p>
+            <b>Declaro para os devidos funs que esta ucha foi preenchida por mim e que todas as informações nela
+                contidas
+                são verdade.</b>
+        </p>
+        <br><br><br>
+        <p style="margin-left: 30px;">
+            <span>
+                <b>Data:</b> _______ / _______ / __________
+            </span>
+            <span style="margin-left: 75px;">
+                _________________________________
+
+
+            </span>
+        </p>
+        <p style="margin-left:550px">Assinatura do Aluno</p>
+    </div>
+</body>
+
+</html>

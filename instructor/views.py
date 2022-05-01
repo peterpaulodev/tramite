@@ -6,7 +6,6 @@ from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
 
-import instructor
 from .models import Instructor, InstructorDocuments
 from .forms import InstructorDocumentsForm, InstructorForm
 from django.contrib import messages

@@ -5,14 +5,43 @@
 
 {% include '../base/header.html' %}
 
-<body class="hold-transition login-page">
+<body class="hold-transition login-page login-back">
     <div class="login-box">
+        <div class="card card-outline card-primary" id="selection-card">
+
+
+            <div class="card-header text-center">
+                <a href="https://www.tramiteaereo.com.br/" target="_blank" class="h1"><b>Trâmite</b> | Login</a>
+            </div>
+            <div class="card-body">
+                {% include '../base/messages.html' %}
+                <p class="login-box-msg">Acessar a plataforma como</p>
+                <div class="row text-center">
+                    <div class="col-md-12">
+                        <button class="btn btn-primary" id="administrator-login">Administrador</button>
+                    </div>
+                    <div class="col-md-12">
+                        <p class="my-2">ou</p>
+                    </div>
+                    <div class="col-md-12">
+                        <button class="btn btn-success student-login">Se tornar um aluno da Trâmite</button>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer text-center">
+                Clique <a href="https://www.tramiteaereo.com.br/" target="_blank">aqui</a> e conheça a Trâmite.
+            </div>
+        </div>
+
         <!-- /.login-logo -->
-        <div class="card card-outline card-primary">
+        <div class="card card-outline card-primary" style="display: none;" id="login-card">
+
+
             <div class="card-header text-center">
                 <a href="https://www.tramiteaereo.com.br/" class="h1"><b>Trâmite</b> | Login</a>
             </div>
             <div class="card-body">
+                {% include '../base/messages.html' %}
                 <p class="login-box-msg">Entre para acessar a plataforma</p>
 
                 <form method="POST">
@@ -35,32 +64,75 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-8">
-                            <div class="icheck-primary">
+                        <div class="">
+                            <!-- <div class="icheck-primary">
                                 <input type="checkbox" id="remember">
                                 <label for="remember">
                                     Lembrar-me
                                 </label>
-                            </div>
+                            </div> -->
                         </div>
                         <!-- /.col -->
-                        <div class="col-4">
+                        <div class="col-12">
                             <button type="submit" class="btn btn-primary btn-block">Entrar</button>
                         </div>
                         <!-- /.col -->
                     </div>
                 </form>
-
-                <!-- <p class="mb-1">
-                    <a href="forgot-password.html">I forgot my password</a>
-                </p>
-                <p class="mb-0">
-                    <a href="register.html" class="text-center">Register a new membership</a>
-                </p> -->
             </div>
             <!-- /.card-body -->
+            <div class="card-footer text-center">
+                <button class="btn btn-success student-login">Seja um aluno da Trâmite</button>
+            </div>
         </div>
         <!-- /.card -->
+
+        <div class="card card-outline card-primary" id="student-card" style="display: none;">
+
+
+            <div class="card-header text-center">
+                <a href="https://www.tramiteaereo.com.br/" target="_blank" class="h1"><b>Trâmite</b> | Aluno</a>
+            </div>
+            <div class="card-body">
+                {% include '../base/messages.html' %}
+                <p class="login-box-msg">Você já realizou o pré-cadastro?</p>
+                <form action={% url 'pre_register_validation' %} method="POST" class="m-0">
+                    {% csrf_token %}
+
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" name="student-cpf" placeholder="CPF" id="student-cpf">
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span class="fas fa-user"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="input-group mb-3">
+                        <input type="password" class="form-control" name="student-password" placeholder="Senha"
+                            id="student-password">
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span class="fas fa-lock"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row text-center">
+                        <div class="col-md-12">
+                            <button type="submit" class="btn btn-primary w-100">Continue de onde parou</button>
+                        </div>
+                        <div class="col-md-12">
+                            <p class="my-2">ou</p>
+                        </div>
+                        <div class="col-md-12">
+                            <a href="/student/registration" class="btn btn-success w-100">Realize o cadastro agora!</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="card-footer text-center">
+                Clique <a href="https://www.tramiteaereo.com.br/" target="_blank">aqui</a> e conheça a Trâmite.
+            </div>
+        </div>
     </div>
     <!-- /.login-box -->
 </body>

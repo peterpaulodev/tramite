@@ -55,4 +55,41 @@ $(function () {
     });
 
     bsCustomFileInput.init();
+
+    $('#student-cpf').mask('000.000.000-00');
 });
+
+
+function address_consult(cep) {
+    $.getJSON("https://viacep.com.br/ws/" + cep + "/json/?callback=?", function (dados) {
+        if (!("erro" in dados)) {
+            //Atualiza os campos com os valores da consulta.
+            $("[id$='address']").val(dados.logradouro)
+            $("[id$='neighbourhood']").val(dados.bairro)
+            $("[id$='city']").val(dados.localidade)
+            $("[id$='uf']").val(dados.uf)
+        } else {
+            //CEP pesquisado não foi encontrado.
+            alert("CEP não encontrado.")
+        }
+    })
+}
+
+$('#search-zipcode').click(function (e) {
+    e.preventDefault()
+    let zipcode = $("[id$='zipcode']").val()
+
+    if (/^[0-9]{8}$/.test(zipcode)) address_consult(zipcode)
+    else alert('Digite um CEP válido!')
+})
+
+$('#administrator-login').click(function (e) {
+    $('#selection-card').hide()
+    $('#login-card').show()
+})
+
+$('.student-login').click(function (e) {
+    $('#selection-card').hide()
+    $('#student-card').show()
+})
+
