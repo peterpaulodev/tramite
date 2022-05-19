@@ -10,4 +10,5 @@ urlpatterns = [
     path('upload_student_document', views.upload_student_document, name='upload_student_document'),
     path('status_update/<int:id>', views.status_update, name='status_update'),
     path('save_observation/<int:id>', views.save_observation, name='save_observation'),
+    path('send_aprove_email/<int:id>', views.send_aprove_email, name='send_aprove_email'),
 ]

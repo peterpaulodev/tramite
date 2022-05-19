@@ -42,6 +42,28 @@
                     </a>
                 </div>
 
+                <div class="col-md-12 mt-4">
+                    <h5>
+                        <i class="fas fa-envelope mr-2" aria-hidden="true"></i>
+                        Enviar email
+                    </h5>
+                    <p>
+                        <i class="fas fa-info-circle" aria-hidden="true"></i>
+                        Avise o seu aluno através do email
+                    </p>
+                    
+                    <a href="/media/student/{{student.id}}/ficha_cadastral_tramite.pdf" class="btn btn-success"
+                        download>
+                        <i class="fas fa-check" aria-hidden="true"></i>
+                        Documentação aprovada
+                    </a>
+                    <a href="/media/student/{{student.id}}/ficha_cadastral_tramite.pdf" class="btn btn-danger"
+                        download>
+                        <i class="fas fa-clock" aria-hidden="true"></i>
+                        Pendências na documentação
+                    </a>
+                </div>
+
                 <!-- registration -->
                 <div class="col-md-12 divisor mt-3 divisor mt-4">
                     <label for="doc-registration_form">Ficha de matrícula</label>
@@ -67,7 +89,8 @@
                             {% endif %}
                         </div>
                         <div class="col-md-3 text-right">
-                            <a target="_blank" href="{{ documents.registration_form.url }}" class="btn btn-info mb-3" onclick="">
+                            <a target="_blank" href="{{ documents.registration_form.url }}" class="btn btn-info mb-3"
+                                onclick="">
                                 <i class="fas fa-file"></i>
                                 Visualizar
                             </a>
@@ -316,7 +339,8 @@
 
                 <!-- distribution_criminal -->
                 <div class="col-md-12 divisor mt-3">
-                    <label for="doc-distribution_criminal">Certidão de Distribuição para Fins Gerais do Tribunal de Justiça Federal</label>
+                    <label for="doc-distribution_criminal">Certidão de Distribuição para Fins Gerais do Tribunal de
+                        Justiça Federal</label>
 
                     {% if documents.distribution_criminal %}
                     <div class="row" id="edit-distribution_criminal">
@@ -339,7 +363,8 @@
                             {% endif %}
                         </div>
                         <div class="col-md-3 text-right">
-                            <a target="_blank" href="{{ documents.distribution_criminal.url }}" class="btn btn-info mb-3" onclick="">
+                            <a target="_blank" href="{{ documents.distribution_criminal.url }}"
+                                class="btn btn-info mb-3" onclick="">
                                 <i class="fas fa-file"></i>
                                 Visualizar
                             </a>
@@ -350,7 +375,8 @@
                                 <i class="fas fa-times"></i>
                             </button>
                             {% if status.distribution_criminal %}
-                            <input type="hidden" name="distribution_criminal" value="{{ status.distribution_criminal }}">
+                            <input type="hidden" name="distribution_criminal"
+                                value="{{ status.distribution_criminal }}">
                             {% endif %}
                         </div>
                     </div>
@@ -407,7 +433,8 @@
                             {% endif %}
                         </div>
                         <div class="col-md-3 text-right">
-                            <a target="_blank" href="{{ documents.basic_avsec_certificate.url }}" class="btn btn-info mb-3" onclick="">
+                            <a target="_blank" href="{{ documents.basic_avsec_certificate.url }}"
+                                class="btn btn-info mb-3" onclick="">
                                 <i class="fas fa-file"></i>
                                 Visualizar
                             </a>
@@ -418,7 +445,8 @@
                                 <i class="fas fa-times"></i>
                             </button>
                             {% if status.basic_avsec_certificate %}
-                            <input type="hidden" name="basic_avsec_certificate" value="{{ status.basic_avsec_certificate }}">
+                            <input type="hidden" name="basic_avsec_certificate"
+                                value="{{ status.basic_avsec_certificate }}">
                             {% endif %}
                         </div>
                     </div>
@@ -543,7 +571,8 @@
                             {% endif %}
                         </div>
                         <div class="col-md-3 text-right">
-                            <a target="_blank" href="{{ documents.pilot_license.url }}" class="btn btn-info mb-3" onclick="">
+                            <a target="_blank" href="{{ documents.pilot_license.url }}" class="btn btn-info mb-3"
+                                onclick="">
                                 <i class="fas fa-file"></i>
                                 Visualizar
                             </a>
@@ -611,7 +640,8 @@
                             {% endif %}
                         </div>
                         <div class="col-md-3 text-right">
-                            <a target="_blank" href="{{ documents.forwarding_in_service.url }}" class="btn btn-info mb-3" onclick="">
+                            <a target="_blank" href="{{ documents.forwarding_in_service.url }}"
+                                class="btn btn-info mb-3" onclick="">
                                 <i class="fas fa-file"></i>
                                 Visualizar
                             </a>
@@ -622,7 +652,8 @@
                                 <i class="fas fa-times"></i>
                             </button>
                             {% if status.forwarding_in_service %}
-                            <input type="hidden" name="forwarding_in_service" value="{{ status.forwarding_in_service }}">
+                            <input type="hidden" name="forwarding_in_service"
+                                value="{{ status.forwarding_in_service }}">
                             {% endif %}
                         </div>
                     </div>
@@ -679,7 +710,8 @@
                             {% endif %}
                         </div>
                         <div class="col-md-3 text-right">
-                            <a target="_blank" href="{{ documents.work_card.url }}" class="btn btn-info mb-3" onclick="">
+                            <a target="_blank" href="{{ documents.work_card.url }}" class="btn btn-info mb-3"
+                                onclick="">
                                 <i class="fas fa-file"></i>
                                 Visualizar
                             </a>
@@ -747,7 +779,8 @@
                             {% endif %}
                         </div>
                         <div class="col-md-3 text-right">
-                            <a target="_blank" href="{{ documents.avsec_certificate.url }}" class="btn btn-info mb-3" onclick="">
+                            <a target="_blank" href="{{ documents.avsec_certificate.url }}" class="btn btn-info mb-3"
+                                onclick="">
                                 <i class="fas fa-file"></i>
                                 Visualizar
                             </a>
@@ -815,7 +848,8 @@
                             {% endif %}
                         </div>
                         <div class="col-md-3 text-right">
-                            <a target="_blank" href="{{ documents.certified_high_school.url }}" class="btn btn-info mb-3" onclick="">
+                            <a target="_blank" href="{{ documents.certified_high_school.url }}"
+                                class="btn btn-info mb-3" onclick="">
                                 <i class="fas fa-file"></i>
                                 Visualizar
                             </a>
@@ -826,7 +860,8 @@
                                 <i class="fas fa-times"></i>
                             </button>
                             {% if status.certified_high_school %}
-                            <input type="hidden" name="certified_high_school" value="{{ status.certified_high_school }}">
+                            <input type="hidden" name="certified_high_school"
+                                value="{{ status.certified_high_school }}">
                             {% endif %}
                         </div>
                     </div>
@@ -883,7 +918,8 @@
                             {% endif %}
                         </div>
                         <div class="col-md-3 text-right">
-                            <a target="_blank" href="{{ documents.proof_of_address.url }}" class="btn btn-info mb-3" onclick="">
+                            <a target="_blank" href="{{ documents.proof_of_address.url }}" class="btn btn-info mb-3"
+                                onclick="">
                                 <i class="fas fa-file"></i>
                                 Visualizar
                             </a>
