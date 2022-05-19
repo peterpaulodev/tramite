@@ -1,0 +1,127 @@
+[{
+        "model": "class.classesname",
+        "pk": 1,
+        "fields": {
+            "name": "FORMAÇÃO EM AVSEC PARA ATENDIMENTO AO PASSAGEIRO - 8h - Presencial - 8h - EAD - Assíncrono"
+        }
+    },
+    {
+        "model": "class.classesname",
+        "pk": 2,
+        "fields": {
+            "name": "ATUALIZAÇÃO EM AVSEC PARA ATENDIMENTO AO PASSAGEIRO - 4h - Presencial"
+        }
+    },
+    {
+        "model": "class.classesname",
+        "pk": 3,
+        "fields": {
+            "name": "FORMAÇÃO EM AVSEC PARA CARGA AÉREA - 6h - Presencial - 6h - EAD - Assíncrono"
+        }
+    },
+    {
+        "model": "class.classesname",
+        "pk": 4,
+        "fields": {
+            "name": "ATUALIZAÇÃO EM AVSEC PARA CARGA AÉREA - 3h - Presencial"
+        }
+    },
+    {
+        "model": "class.classesname",
+        "pk": 5,
+        "fields": {
+            "name": "FORMAÇÃO EM AVSEC PARA OPERAÇÕES DE SOLO - 6h - Presencial - 6h - EAD - Assíncrono"
+        }
+    },
+    {
+        "model": "class.classesname",
+        "pk": 6,
+        "fields": {
+            "name": "ATUALIZAÇÃO EM AVSEC PARA OPERAÇÕES DE SOLO - 3h - Presencial"
+        }
+    },
+    {
+        "model": "class.classesname",
+        "pk": 7,
+        "fields": {
+            "name": "FORMAÇÃO EM AVSEC PARA TRIPULANTES - 8h - Presencial"
+        }
+    },
+    {
+        "model": "class.classesname",
+        "pk": 8,
+        "fields": {
+            "name": "ATUALIZAÇÃO EM AVSEC PARA TRIPULANTES - 4h - Presencial"
+        }
+    },
+    {
+        "model": "class.classesname",
+        "pk": 9,
+        "fields": {
+            "name": "FORMAÇÃO EM AVSEC PARA VIGILANTES - 16h - Presencial"
+        }
+    },
+    {
+        "model": "class.classesname",
+        "pk": 10,
+        "fields": {
+            "name": "ATUALIZAÇÃO EM AVSEC PARA VIGILANTES - 8h - Presencial"
+        }
+    },
+    {
+        "model": "class.classesname",
+        "pk": 11,
+        "fields": {
+            "name": "FORMAÇÃO EM BÁSICO AVSEC - 32h - Presencial"
+        }
+    },
+    {
+        "model": "class.classesname",
+        "pk": 12,
+        "fields": {
+            "name": "ATUALIZAÇÃO EM BÁSICO AVSEC - 12h - Presencial"
+        }
+    },
+    {
+        "model": "class.classesname",
+        "pk": 13,
+        "fields": {
+            "name": "FORMAÇÃO EM INSPEÇÃO DE SEGURANÇA EM AVIAÇÃO CIVIL - 36h - Presencial"
+        }
+    },
+    {
+        "model": "class.classesname",
+        "pk": 14,
+        "fields": {
+            "name": "ATUALIZAÇÃO EM INSPEÇÃO DE SEGURANÇA EM AVIAÇÃO CIVIL - 16h - Presencial"
+        }
+    },
+    {
+        "model": "class.classesname",
+        "pk": 15,
+        "fields": {
+            "name": "FORMAÇÃO EM AVSEC PARA OPERADOR DE AERÓDROMO - 36h - Presencial"
+        }
+    },
+    {
+        "model": "class.classesname",
+        "pk": 16,
+        "fields": {
+            "name": "ATUALIZAÇÃO EM AVSEC PARA OPERADOR DE AERÓDROMO - 16h - Presencial"
+        }
+    },
+    {
+        "model": "class.classesname",
+        "pk": 17,
+        "fields": {
+            "name": "FORMAÇÃO EM AVSEC PARA OPERADOR AÉREO - 32h - Presencial"
+        }
+    },
+    {
+        "model": "class.classesname",
+        "pk": 18,
+        "fields": {
+            "name": "ATUALIZAÇÃO EM AVSEC PARA OPERADOR AÉREO - 16h - Presencial"
+        }
+    }
+]

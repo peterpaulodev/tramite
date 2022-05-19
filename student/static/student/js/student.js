@@ -21,25 +21,48 @@ $(function () {
     //Date picker
     $('#student-birth_date').datetimepicker(datepicker_options)
 
-    // $('#residence-upload').on('change', function () {
-    //     $('form#upload-docs').submit();
-    // });
+    $('#in_class').click(function (e) {
+        e.preventDefault();
+        link_in_class()
+    });
 
-    // $('#registration-upload').on('change', function () {
-    //     $('form#upload-docs').submit();
-    // });
+    $('#edit-link-class').click(function (e) {
+        e.preventDefault();
+        $(this).hide()
+        $('#link-class-button').slideToggle()
+        $('#select-class-div').slideToggle()
+    });
 })
 
 function set_form_mask() {
     $('#student-primary_phone').mask('(00) 00000-0000');
     $('#student-secondary_phone').mask('(00) 00000-0000');
     $('#student-cpf').mask('000.000.000-00');
-    $('#student-rg').mask('00.000.000-0');
-    $('#class-zipcode').mask('99999-999');
+    $('#student-rg').mask('#', {
+        reverse: true
+    });
+    $('#student-zipcode').mask('#', {
+        reverse: true
+    });
 }
 
 function edit_student_document(event, div) {
     event.preventDefault();
 
     $('#div-' + div).slideToggle()
+}
+
+function update_field_status(input_id, event, status) {
+    event.preventDefault();
+
+    $('select[name="' + input_id + '"]').val(status)
+    $('form#status_doc_update').submit()
+}
+
+function link_in_class() {
+    let selected_class = $('#class-name-select').val()
+
+    $('input[name="classes_name"]').val(selected_class);
+
+    $('form#link_class').submit();
 }

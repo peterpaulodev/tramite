@@ -1,3 +1,5 @@
+from asyncio.windows_events import NULL
+import os
 from this import d
 from colorama import Back
 from django.http import HttpResponse
@@ -6,21 +8,37 @@ from django.contrib.auth.decorators import login_required
 from main.functions import clean_string, logo_tramite_base64
 from student.models import DocumentObservation, DocumentStatus, Student, StudentDocuments
 from django.contrib import messages
-from student.forms import StudentDocumentsForm, StudentForm
+from student.forms import DocumentObservationForm, DocumentStatusForm, StudentDocumentsForm, StudentForm
 from datetime import datetime
 import pdfkit
-from student.models import Student
 from django.template.loader import render_to_string
-import base64
+from email.message import EmailMessage
+from email.utils import formataddr
+import smtplib
+
+import importlib.util
+import sys
+
+# class module importation
+spec = importlib.util.spec_from_file_location(
+    "class.views", "./class/views.py")
+_class = importlib.util.module_from_spec(spec)
+sys.modules["module.name"] = _class
+spec.loader.exec_module(_class)
+
+CONFIG = pdfkit.configuration(
+    wkhtmltopdf=r"C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe")
 
 # Create your views here.
+
+
 @login_required
 def index(request):
-    student = Student.objects.all()
+    students = Student.objects.all()
 
     data = {
         'has_datatable': True,
-        'student': student
+        'students': students
     }
 
     return render(request, 'student/index.html', data)
@@ -31,17 +49,38 @@ def edit(request, id):
     student = get_object_or_404(Student, pk=id)
     student_form = StudentForm(instance=student)
 
-    try:
-        documents = StudentDocuments.objects.get(
-            student=id)
+    documents = False
+    status = False
+    observations = False
 
+    try:
+        documents = StudentDocuments.objects.get(student=id)
     except StudentDocuments.DoesNotExist:
         documents = False
 
+    try:
+        status = DocumentStatus.objects.get(student=id)
+        status_form = DocumentStatusForm(instance=status)
+    except DocumentStatus.DoesNotExist:
+        status = False
+        status_form = DocumentStatusForm()
+
+    try:
+        observations = DocumentObservation.objects.get(student=id)
+        observation_form = DocumentObservationForm(instance=observations)
+    except DocumentObservation.DoesNotExist:
+        observations = False
+        observation_form = DocumentObservationForm()
+
+    print(Back.RED, "==>> observation_form: ", observations)
+
     data = {
-        'documents': documents,
         'student': student,
-        'student_form': student_form
+        'status': status,
+        'observation_form': observation_form,
+        'documents': documents,
+        'status_form': status_form,
+        'student_form': student_form,
     }
 
     if request.method == 'POST':
@@ -51,12 +90,12 @@ def edit(request, id):
             student_form.save()
 
             data['student_form'] = student_form
-            messages.success(request, 'Instrutor editado com sucesso!')
+            messages.success(request, 'Aluno editado com sucesso!')
 
             return render(request, 'student/edit.html', data)
 
         else:
-            messages.error(request, 'Erro ao validar o cadastro de instrutor!')
+            messages.error(request, 'Erro ao validar o cadastro do aluno!')
             return render(request, 'student/edit.html', data)
 
     else:
@@ -87,12 +126,13 @@ def registration(request):
                 return redirect('/student/registration')
             except Student.DoesNotExist:
                 student_form.save()
-
-                messages.success(request, 'Seja bem vindo! ' + student_form.data['name'])
-                return redirect('/student/documentation/' + str(student_form.data['id']))
+                student_id = str(student_form.instance.id)
+                os.mkdir("media/student/" + student_id + "/")
+                return redirect('/student/documentation/' + student_id)
 
         else:
-            print(Back.RED, "==>> student_form: ", student_form.errors.as_json())
+            print(Back.RED, "==>> student_form: ",
+                  student_form.errors.as_json())
             return redirect('/student/registration')
 
     else:
@@ -111,17 +151,19 @@ def pre_register_validation(request):
             student = Student.objects.get(cpf=cpf, password=password)
             print(Back.BLUE, "==>> student: ", student)
 
-            messages.success(request, 'Seja bem vindo! ' + student.name)
             return redirect('/student/documentation/' + str(student.id))
         except Student.DoesNotExist:
-            messages.error(request, 'Não foi encontrado nenhum aluno com esses dados!')
+            messages.error(
+                request, 'Não foi encontrado nenhum aluno com esses dados!')
             return redirect('/accounts/login')
     else:
         return render(request, 'student/registration.html', {'student_form': student_form})
 
+
 def documentation(request, id):
     student = get_object_or_404(Student, pk=id)
     registration_form = create_student_registration_file(id)
+    residence_form = create_residence_declaration_file(id)
 
     documents = False
     status = False
@@ -148,6 +190,7 @@ def documentation(request, id):
 
     return render(request, 'student/documentation.html', data)
 
+
 def upload_student_document(request):
     if request.method == "POST":
         student_id = request.POST["student"]
@@ -158,10 +201,12 @@ def upload_student_document(request):
         try:
             documents = StudentDocuments.objects.get(student=student_id)
 
-            student_documents = StudentDocumentsForm(request.POST, request.FILES, instance=documents)
+            student_documents = StudentDocumentsForm(
+                request.POST, request.FILES, instance=documents)
 
         except StudentDocuments.DoesNotExist:
-            student_documents = StudentDocumentsForm(request.POST, request.FILES)
+            student_documents = StudentDocumentsForm(
+                request.POST, request.FILES)
 
         if student_documents.is_valid():
             student_documents.save()
@@ -181,16 +226,162 @@ def upload_student_document(request):
     else:
         return redirect('/student/documentation/' + str(student_id))
 
+
 def create_student_registration_file(id):
     student = get_object_or_404(Student, pk=id)
-
-    config = pdfkit.configuration(
-        wkhtmltopdf=r"C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe")
+    print("==>> id: ", id)
 
     encoded_string = logo_tramite_base64()
 
-    html = render_to_string('student/registration_form.html', {'student': student, 'logo': encoded_string})
+    html = render_to_string('student/registration_form.html',
+                            {'student': student, 'logo': encoded_string})
 
-    pdf = pdfkit.from_string(html, "media/student/"+str(id)+"/ficha_cadastral_tramite.pdf", configuration=config)
+    pdf = pdfkit.from_string(html, "media/student/"+str(id) +
+                             "/ficha_cadastral_tramite.pdf", configuration=CONFIG)
 
     return pdf
+
+
+def create_residence_declaration_file(id):
+    student = get_object_or_404(Student, pk=id)
+
+    html = render_to_string(
+        'student/residence_declaration_form.html', {'student': student})
+
+    pdf = pdfkit.from_string(html, "media/student/"+str(id) +
+                             "/declaracao_de_residencia.pdf", configuration=CONFIG)
+
+    return pdf
+
+
+def status_update(request, id):
+
+    if request.method == "POST":
+        try:
+            status = DocumentStatus.objects.get(student=id)
+
+            status_form = DocumentStatusForm(request.POST, instance=status)
+
+        except DocumentStatus.DoesNotExist:
+            status_form = DocumentStatusForm(request.POST)
+
+        print("==>> status_form: ", request.POST)
+
+        if status_form.is_valid():
+            status_form.save()
+
+            messages.success(request, 'Status salvo com sucesso!')
+            return redirect('/student/edit/' + str(id))
+        else:
+            messages.error(request, 'Erro ao salvar o status!')
+            print(Back.RED, "==>> class_form: ",
+                  status_form.errors.as_json())
+
+            return redirect('/student/edit/' + str(id))
+    else:
+        return redirect('/student/edit/' + str(id))
+
+
+def save_observation(request, id):
+    if request.method == "POST":
+        updated_request = request.POST.copy()
+        updated_request.update({'student': id})
+        print(Back.RED, "==>> updated_request: ", updated_request)
+
+        try:
+            observations = DocumentObservation.objects.get(student=id)
+            print(Back.BLUE, "==>> observations: ", observations)
+
+            obs_form = DocumentObservationForm(
+                updated_request, instance=observations)
+
+        except DocumentObservation.DoesNotExist:
+            obs_form = DocumentObservationForm(updated_request)
+
+        if obs_form.is_valid():
+            obs_form.save()
+
+            messages.success(request, 'Observação salva com sucesso!')
+            return redirect('/student/edit/' + str(id))
+        else:
+            messages.error(request, 'Erro ao salvar o observação!')
+            print(Back.RED, "==>> obs_form: ",
+                  obs_form.errors.as_json())
+
+            return redirect('/student/edit/' + str(id))
+    else:
+        return redirect('/student/edit/' + str(id))
+
+
+EMAIL_ADDRESS = 'peterson.paulo31@gmail.com'
+EMAIL_PASSWORD = 'oliviaeuteamo31$'
+
+
+def send_pending_email(request, id):
+    student = get_object_or_404(Student, pk=id)
+    msg = EmailMessage()
+    msg['Subject'] = 'Documentação pendente...'
+    msg['From'] = formataddr(('Trâmite Aéreo', EMAIL_ADDRESS))
+    msg['To'] = 'peterpaulodev@gmail.com'
+    body = '''
+        Prezado(a) Aluno!
+
+        Informamos que sua inscrição no curso AVSEC já está em andamento porém ainda constam pendências para regularizar.
+        Pedimos que verifique os campos informados na Plataforma e anexe a documentação pendente para análise.
+    '''
+    msg.set_content(body)
+
+    with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
+        smtp.login(EMAIL_ADDRESS, EMAIL_PASSWORD)
+        smtp.send_message(msg)
+
+    messages.success(request, 'Email enviado com sucesso!')
+
+    return redirect('/student/edit/' + str(id))
+
+
+def send_aprove_email(request, id):
+    student = get_object_or_404(Student, pk=id)
+    msg = EmailMessage()
+    msg['Subject'] = 'Documentação aprovada!'
+    msg['From'] = formataddr(('Trâmite Aéreo', EMAIL_ADDRESS))
+    msg['To'] = 'peterpaulodev@gmail.com'
+    body = '''
+        Prezado(a) Aluno!
+
+        Informamos que sua incrição no Curso AVSEC está confirmada e sua documentação está regular.
+
+        Segue abaixo informações sobre o Curso: AVSEC
+
+        Período: (data inicial) a (data final)
+        Local do Curso:
+        Nome do Instrutor:
+    '''
+    msg.set_content(body)
+
+    with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
+        smtp.login(EMAIL_ADDRESS, EMAIL_PASSWORD)
+        smtp.send_message(msg)
+
+    messages.success(request, 'Email enviado com sucesso!')
+
+    return redirect('/student/edit/' + str(id))
+
+
+def link_in_class(request, id):
+    if request.method == "POST":
+        selected_class_id = request.POST['classes_name']
+        print(Back.RED, "==>> selected_class_id: ", type(selected_class_id))
+
+        if not selected_class_id:
+            classes_instance = None
+            messages.info(request, 'Atenção! O Vínculo ao curso foi removido.')
+        else:
+            classes_instance = _class.return_self_instance(selected_class_id)
+            messages.success(request, 'Vínculo criado com sucesso!')
+
+        student = Student.objects.get(pk=id)
+        student.classes = classes_instance
+        student.save()
+
+    return redirect('/student/edit/' + str(id))

@@ -8,17 +8,17 @@
 <body class="hold-transition login-page login-back">
     <div class="login-box">
         <div class="card card-outline card-primary" id="selection-card">
-
-
             <div class="card-header text-center">
-                <a href="https://www.tramiteaereo.com.br/" target="_blank" class="h1"><b>Trâmite</b> | Login</a>
+                <a href="https://www.tramiteaereo.com.br/" target="_blank" class="h1">
+                    <img src="{% static 'dist/img/logo-tramite.png' %}" alt="" srcset="">
+                </a>
             </div>
             <div class="card-body">
                 {% include '../base/messages.html' %}
                 <p class="login-box-msg">Acessar a plataforma como</p>
                 <div class="row text-center">
                     <div class="col-md-12">
-                        <button class="btn btn-primary" id="administrator-login">Administrador</button>
+                        <button class="btn btn-primary administrator-login">Administrador</button>
                     </div>
                     <div class="col-md-12">
                         <p class="my-2">ou</p>
@@ -35,10 +35,11 @@
 
         <!-- /.login-logo -->
         <div class="card card-outline card-primary" style="display: none;" id="login-card">
-
-
             <div class="card-header text-center">
-                <a href="https://www.tramiteaereo.com.br/" class="h1"><b>Trâmite</b> | Login</a>
+                <a href="https://www.tramiteaereo.com.br/" target="_blank" class="h1">
+                    <img src="{% static 'dist/img/logo-tramite.png' %}" alt="" srcset="">
+                </a>
+                <h4 class="mt-3">Área do administrador</h4>
             </div>
             <div class="card-body">
                 {% include '../base/messages.html' %}
@@ -89,9 +90,18 @@
 
         <div class="card card-outline card-primary" id="student-card" style="display: none;">
 
-
             <div class="card-header text-center">
-                <a href="https://www.tramiteaereo.com.br/" target="_blank" class="h1"><b>Trâmite</b> | Aluno</a>
+                <div class="text-left">
+                    <button class="btn btn-primary administrator-login">
+                        <i class="fas fa-arrow-left" aria-hidden="true"></i>
+                    </button>
+                </div>
+
+                <a href="https://www.tramiteaereo.com.br/" target="_blank" class="h1">
+                    <img src="{% static 'dist/img/logo-tramite.png' %}" alt="" srcset="">
+                </a>
+
+                <h4 class="mt-3"><i class="nav-icon fas fa-user-graduate mr-2"></i>Área do aluno</h4>
             </div>
             <div class="card-body">
                 {% include '../base/messages.html' %}

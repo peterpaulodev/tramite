@@ -28,8 +28,8 @@
             <tbody>
                 {% for class in classes %}
                 <tr>
-                    <td>{{ class.id }}</td>
-                    <td>{{ class.name | title }}</td>
+                    <td>{{ class.anac_id }}</td>
+                    <td>{{ class.name_class | title }}</td>
                     <td>{{ class.instructor | title }}</td>
                     <td>{{ class.initial_date | date:"d/m/Y" }}</td>
                     <td>{{ class.finish_date | date:"d/m/Y" }}</td>

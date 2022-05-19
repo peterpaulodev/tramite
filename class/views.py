@@ -10,6 +10,9 @@ from datetime import datetime
 from main.functions import clean_string
 
 # Create your views here.
+def return_self_instance(id):
+    return Classes.objects.get(id=id)
+
 @login_required
 def index(request):
     classes = Classes.objects.all()

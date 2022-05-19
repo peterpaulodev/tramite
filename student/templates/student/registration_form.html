@@ -67,9 +67,22 @@
 
         <p> <b>CPF:</b> {{ student.cpf }}</p>
 
-        <p> <b>Trabalha na aviação?</b> {{ student.aviation_work|yesno:"Sim,Não,-" }}</p>
+        <p>
+            <b>Trabalha na aviação?</b>
+            {% if student.aviation_work == "yes" %}
+                &#9745; Sim &#9633; Não
+            {% else %}
+                &#9633; Sim &#9745; Não
+            {% endif %}
+        </p>
 
-        <p> <b>Trabalha na Segurança AVSEC?</b> {{ student.avsec_work|yesno:"Sim,Não,-" }}</p>
+        <p> <b>Trabalha na Segurança AVSEC?</b>
+            {% if student.avsec_work == "yes" %}
+            &#9745; Sim &#9633; Não
+            {% else %}
+            &#9633; Sim &#9745; Não
+            {% endif %}
+        </p>
 
         <p> <b>Nome da empresa em que trabalha:</b> {{ student.working_company_name }}</p>
 
