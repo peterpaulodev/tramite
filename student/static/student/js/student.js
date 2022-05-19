@@ -21,13 +21,17 @@ $(function () {
     //Date picker
     $('#student-birth_date').datetimepicker(datepicker_options)
 
-    // $('#residence-upload').on('change', function () {
-    //     $('form#upload-docs').submit();
-    // });
+    $('#in_class').click(function (e) {
+        e.preventDefault();
+        link_in_class()
+    });
 
-    // $('#registration-upload').on('change', function () {
-    //     $('form#upload-docs').submit();
-    // });
+    $('#edit-link-class').click(function (e) {
+        e.preventDefault();
+        $(this).hide()
+        $('#link-class-button').slideToggle()
+        $('#select-class-div').slideToggle()
+    });
 })
 
 function set_form_mask() {
@@ -48,9 +52,17 @@ function edit_student_document(event, div) {
     $('#div-' + div).slideToggle()
 }
 
-function update_field_status($this, event, status) {
+function update_field_status(input_id, event, status) {
     event.preventDefault();
 
-    $($this).parent().find('input').val(status)
-    $('#status_doc_update').submit()
+    $('select[name="' + input_id + '"]').val(status)
+    $('form#status_doc_update').submit()
+}
+
+function link_in_class() {
+    let selected_class = $('#class-name-select').val()
+
+    $('input[name="classes_name"]').val(selected_class);
+
+    $('form#link_class').submit();
 }

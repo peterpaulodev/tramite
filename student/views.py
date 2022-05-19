@@ -1,3 +1,4 @@
+from asyncio.windows_events import NULL
 import os
 from this import d
 from colorama import Back
@@ -11,7 +12,19 @@ from student.forms import DocumentObservationForm, DocumentStatusForm, StudentDo
 from datetime import datetime
 import pdfkit
 from django.template.loader import render_to_string
-from django.core.mail import send_mail
+from email.message import EmailMessage
+from email.utils import formataddr
+import smtplib
+
+import importlib.util
+import sys
+
+# class module importation
+spec = importlib.util.spec_from_file_location(
+    "class.views", "./class/views.py")
+_class = importlib.util.module_from_spec(spec)
+sys.modules["module.name"] = _class
+spec.loader.exec_module(_class)
 
 CONFIG = pdfkit.configuration(
     wkhtmltopdf=r"C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe")
@@ -47,14 +60,17 @@ def edit(request, id):
 
     try:
         status = DocumentStatus.objects.get(student=id)
-    except StudentDocuments.DoesNotExist:
+        status_form = DocumentStatusForm(instance=status)
+    except DocumentStatus.DoesNotExist:
         status = False
+        status_form = DocumentStatusForm()
 
     try:
         observations = DocumentObservation.objects.get(student=id)
         observation_form = DocumentObservationForm(instance=observations)
-    except StudentDocuments.DoesNotExist:
+    except DocumentObservation.DoesNotExist:
         observations = False
+        observation_form = DocumentObservationForm()
 
     print(Back.RED, "==>> observation_form: ", observations)
 
@@ -63,7 +79,8 @@ def edit(request, id):
         'status': status,
         'observation_form': observation_form,
         'documents': documents,
-        'student_form': student_form
+        'status_form': status_form,
+        'student_form': student_form,
     }
 
     if request.method == 'POST':
@@ -241,24 +258,24 @@ def status_update(request, id):
 
     if request.method == "POST":
         try:
-            documents = DocumentStatus.objects.get(student=id)
+            status = DocumentStatus.objects.get(student=id)
 
-            status_doc = DocumentStatusForm(request.POST, instance=documents)
+            status_form = DocumentStatusForm(request.POST, instance=status)
 
         except DocumentStatus.DoesNotExist:
-            status_doc = DocumentStatusForm(request.POST)
+            status_form = DocumentStatusForm(request.POST)
 
-        print("==>> status_doc: ", request.POST)
+        print("==>> status_form: ", request.POST)
 
-        if status_doc.is_valid():
-            status_doc.save()
+        if status_form.is_valid():
+            status_form.save()
 
             messages.success(request, 'Status salvo com sucesso!')
             return redirect('/student/edit/' + str(id))
         else:
             messages.error(request, 'Erro ao salvar o status!')
             print(Back.RED, "==>> class_form: ",
-                  status_doc.errors.as_json())
+                  status_form.errors.as_json())
 
             return redirect('/student/edit/' + str(id))
     else:
@@ -284,7 +301,7 @@ def save_observation(request, id):
         if obs_form.is_valid():
             obs_form.save()
 
-            messages.success(request, 'Observação salvo com sucesso!')
+            messages.success(request, 'Observação salva com sucesso!')
             return redirect('/student/edit/' + str(id))
         else:
             messages.error(request, 'Erro ao salvar o observação!')
@@ -296,13 +313,75 @@ def save_observation(request, id):
         return redirect('/student/edit/' + str(id))
 
 
-def send_aprove_email(request, id):
-    email = send_mail(
-        'Teste',
-        'Here is the message.',
-        'peterson.paulo31@gmail.com',
-        ['peterpaulodev@gmail.com'],
-        fail_silently=False,
-    )
+EMAIL_ADDRESS = 'peterson.paulo31@gmail.com'
+EMAIL_PASSWORD = 'oliviaeuteamo31$'
 
-    return HttpResponse(email)
+
+def send_pending_email(request, id):
+    student = get_object_or_404(Student, pk=id)
+    msg = EmailMessage()
+    msg['Subject'] = 'Documentação pendente...'
+    msg['From'] = formataddr(('Trâmite Aéreo', EMAIL_ADDRESS))
+    msg['To'] = 'peterpaulodev@gmail.com'
+    body = '''
+        Prezado(a) Aluno!
+
+        Informamos que sua inscrição no curso AVSEC já está em andamento porém ainda constam pendências para regularizar.
+        Pedimos que verifique os campos informados na Plataforma e anexe a documentação pendente para análise.
+    '''
+    msg.set_content(body)
+
+    with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
+        smtp.login(EMAIL_ADDRESS, EMAIL_PASSWORD)
+        smtp.send_message(msg)
+
+    messages.success(request, 'Email enviado com sucesso!')
+
+    return redirect('/student/edit/' + str(id))
+
+
+def send_aprove_email(request, id):
+    student = get_object_or_404(Student, pk=id)
+    msg = EmailMessage()
+    msg['Subject'] = 'Documentação aprovada!'
+    msg['From'] = formataddr(('Trâmite Aéreo', EMAIL_ADDRESS))
+    msg['To'] = 'peterpaulodev@gmail.com'
+    body = '''
+        Prezado(a) Aluno!
+
+        Informamos que sua incrição no Curso AVSEC está confirmada e sua documentação está regular.
+
+        Segue abaixo informações sobre o Curso: AVSEC
+
+        Período: (data inicial) a (data final)
+        Local do Curso:
+        Nome do Instrutor:
+    '''
+    msg.set_content(body)
+
+    with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
+        smtp.login(EMAIL_ADDRESS, EMAIL_PASSWORD)
+        smtp.send_message(msg)
+
+    messages.success(request, 'Email enviado com sucesso!')
+
+    return redirect('/student/edit/' + str(id))
+
+
+def link_in_class(request, id):
+    if request.method == "POST":
+        selected_class_id = request.POST['classes_name']
+        print(Back.RED, "==>> selected_class_id: ", type(selected_class_id))
+
+        if not selected_class_id:
+            classes_instance = None
+            messages.info(request, 'Atenção! O Vínculo ao curso foi removido.')
+        else:
+            classes_instance = _class.return_self_instance(selected_class_id)
+            messages.success(request, 'Vínculo criado com sucesso!')
+
+        student = Student.objects.get(pk=id)
+        student.classes = classes_instance
+        student.save()
+
+    return redirect('/student/edit/' + str(id))

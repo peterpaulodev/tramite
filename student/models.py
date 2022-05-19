@@ -100,7 +100,8 @@ class Student(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    in_class = models.ForeignKey("class.Classes", on_delete=models.SET_NULL, null=True, name='classes')
+    in_class = models.ForeignKey("class.Classes", on_delete=models.SET_NULL, null=True, name='classes', blank=True)
+    class_declaration = models.ForeignKey("class.ClassesName", on_delete=models.SET_NULL, null=True, name='classes_name')
 
     def __str__(self):
         return self.name

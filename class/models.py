@@ -14,7 +14,6 @@ class Classes(models.Model):
     ]
 
     anac_id = models.CharField(max_length=255)
-    name = models.CharField(max_length=255)
     address = models.CharField(max_length=255)
     zipcode = models.CharField(max_length=255)
     number = models.IntegerField()
@@ -27,6 +26,14 @@ class Classes(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     instructor = models.ForeignKey("instructor.Instructor", on_delete=models.SET_NULL, null=True)
+    name_class = models.ForeignKey("ClassesName", on_delete=models.SET_NULL, null=True, default=None)
+
+    def __str__(self):
+        context = f'[{self.anac_id}] {self.name_class.name}'
+        return context
+
+class ClassesName(models.Model):
+    name = models.CharField(max_length=255)
 
     def __str__(self):
         return self.name

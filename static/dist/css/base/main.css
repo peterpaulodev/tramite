@@ -82,3 +82,7 @@ textarea {   /* for all text* area elements */
 .normal-text-label > div > div > label{
     font-weight: 400 !important;
 }
+
+.text-decoration-underline {
+    text-decoration: underline !important;
+}
