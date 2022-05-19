@@ -1,0 +1,89 @@
+{% load static %}
+
+<html>
+
+<head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+
+    <style>
+        * {
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        table,
+        th,
+        td {
+            border: 1px solid black;
+        }
+
+        table {
+            width: 100%;
+        }
+
+        .box {
+            padding: 15px;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        h3 {
+            text-decoration: underline;
+        }
+
+        .line {
+            border-bottom: 1px solid black;
+        }
+
+        h2 {
+            font-weight: 400;
+        }
+
+        .underline {
+            text-decoration: underline;
+        }
+
+        p {
+            font-size: 20px;
+            line-height: 2;
+        }
+    </style>
+</head>
+
+<body>
+    <br><br>
+    <h2 class="text-center">DECLARAÇÃO DE RESIDÊNCIA</h2>
+    <h2 class="text-center">(LEI N° 7.115/83)</h2>
+
+    <div class="box">
+        <p>
+            Eu, {{student.name}},
+            Nacionalidade: {{student.nationality}}, Profissão: ________________________,
+            RG N°: {{student.rg}}, Orgão Expedidor: {{student.issuing_agency}}, UF: {{student.uf}},
+            CPF: {{student.cpf}}
+            <br>
+             Declaro para todos os fins, nos termos da Lei N° 7.115/83, de 29 de agosto de 1983
+            que resido na: (Rua/Rod/Av/TV) {{student.address}}, N° {{student.number}},
+            Complemento: {% if student.complement %} {{student.complement}} {% else %} Nenhum {% endif %},
+            Bairro: {{student.neigh}}, Cidade: {{student.city}}, Estado: {{student.uf}}, CEP: {{student.zipcode}}.
+        </p>
+
+        <p>Declaro ainda que estou ciente dos dizeres do artigo 2° da citada Lei:</p>
+        <br>
+        <p>
+            "Se comprovadamente falsa a declaração, sujeitar-se-á declarante às sanções civis, administraticas e
+            criminais previstas na legislação aplicável."
+        </p>
+        <br>
+        <p>E, por ser a expressão da verdade, firmo o presente.</p>
+        <br><br>
+        <p>Cidade: ________________________________ Data: _______________________________</p>
+
+        <br><br><br><br>
+        <div class="line"></div>
+        <p class="text-center">Assinatura do declarante</p>
+    </div>
+</body>
+
+</html>

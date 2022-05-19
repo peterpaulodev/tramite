@@ -33,13 +33,13 @@
                         {% render_field class_form.name type="text" class="form-control" id="class-name" placeholder="Insira o nome do curso" %}
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <div class="form-group">
                         <label for="teacher-name">Instrutor do curso</label>
                         {% render_field class_form.instructor class="form-control" id="class-name" placeholder="Insira o nome do curso" %}
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <div class="form-group">
                         <label>Data inicial</label>
                         <div class="input-group date" data-target-input="nearest">
@@ -50,7 +50,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <div class="form-group">
                         <label>Data final</label>
                         <div class="input-group date" data-target-input="nearest">
@@ -59,6 +59,12 @@
                                 <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                             </div>
                         </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="teacher-name">Período</label>
+                        {% render_field class_form.period class="form-control" id="period" %}
                     </div>
                 </div>
             </div>

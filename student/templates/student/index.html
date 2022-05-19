@@ -19,8 +19,7 @@
                     <th>Aluno</th>
                     <th>Curso</th>
                     <th>Email</th>
-                    <th>Trabalha na aviação</th>
-                    <th>Trabalha na AVSEC</th>
+                    <th>Telefone</th>
                     <th>Documentação</th>
                     <th>Ações</th>
                 </tr>
@@ -32,10 +31,9 @@
                         <i class="fas fa-user mr-1"></i>
                         {{ student.name | title }}
                     </td>
-                    <td>{{ student.in_class }}</td>
+                    <td>[{{ student.classes.id }}] {{ student.classes }}</td>
                     <td>{{ student.email }}</td>
-                    <td>{{ student.aviation_work }}</td>
-                    <td>{{ student.avsec_work }}</td>
+                    <td>{{ student.primary_phone }}</td>
                     <td class="text-center">
                         {% if student.ready_documents %}
                             <i class="fas fa-check text-success"></i> Entregue
@@ -44,8 +42,8 @@
                         {% endif %}
                     </td>
                     <td class="text-center">
-                        <a href="edit/{{ student.id }}" title="Editar Instrutor" data-toggle="tooltip" data-placement="top">
-                            <i class="fas fa-edit"></i>
+                        <a href="edit/{{ student.id }}" title="Analisar documentação" data-toggle="tooltip" data-placement="top">
+                            <i class="fas fa-id-card"></i>
                         </a>
                     </td>
                 </tr>
@@ -56,8 +54,7 @@
                     <th>Aluno</th>
                     <th>Curso</th>
                     <th>Email</th>
-                    <th>Trabalha na aviação</th>
-                    <th>Trabalha na AVSEC</th>
+                    <th>Telefone</th>
                     <th>Documentação</th>
                     <th>Ações</th>
                 </tr>

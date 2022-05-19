@@ -79,17 +79,18 @@ $('#search-zipcode').click(function (e) {
     e.preventDefault()
     let zipcode = $("[id$='zipcode']").val()
 
-    if (/^[0-9]{8}$/.test(zipcode)) address_consult(zipcode)
-    else alert('Digite um CEP válido!')
+    address_consult(zipcode)
 })
 
-$('#administrator-login').click(function (e) {
+$('.administrator-login').click(function (e) {
     $('#selection-card').hide()
+    $('#student-card').hide()
     $('#login-card').show()
 })
 
 $('.student-login').click(function (e) {
     $('#selection-card').hide()
+    $('#login-card').hide()
     $('#student-card').show()
 })
 

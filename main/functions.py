@@ -1,7 +1,5 @@
 import base64
 import re
-import pdfkit
-
 
 def clean_string(value):
     return re.sub('[^A-Za-z0-9]+', '', value)
@@ -11,7 +9,7 @@ def document_status_name(status):
     new_status = 'Aguardando Aprovação'
 
     if status == 'RECUSADO':
-        new_status = 'Documento recusado'
+        new_status = 'Documento não aceito'
     elif status == 'APROVADO':
         new_status = 'Documento aprovado'
 

@@ -86,6 +86,11 @@ if DEBUG:
         'HOST'    : 'localhost',
         'PORT'    : '3306',
     }
+
+    # DATABASE_CONFIG = {
+    #     'ENGINE': 'django.db.backends.sqlite3',
+    #     'NAME': BASE_DIR / 'db.sqlite3',
+    # }
 else:
     DATABASE_CONFIG = {
         'ENGINE'  : 'django.db.backends.mysql',

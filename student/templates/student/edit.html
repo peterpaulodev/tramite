@@ -2,451 +2,928 @@
 {% load static %}
 {% load widget_tweaks %}
 
-{% block title %}Instrutor - Editar{% endblock %}
-{% block page_title %}<i class="fas fa-edit"></i> Editando: {{ instructor.name }}{% endblock %}
+{% block title %}Aluno - Editar{% endblock %}
+{% block page_title %}<i class="fas fa-user-graduate"></i> Aluno: {{ student.name }}{% endblock %}
 
 {% block style %}
-<link rel="stylesheet" href="{% static 'instructor/css/instructor.css' %}"> {% endblock %}
+<link rel="stylesheet" href="{% static 'student/css/student.css' %}"> {% endblock %}
 
 {% block content %}
-<div class="card card-primary card-outline">
-    <div class="card-header">
-        <h5 class="card-title my-auto">Informações do instrutor</h5>
-        <div class="card-tools">
-            <a href="/instructor/create" class="btn btn-primary"><i class="fas fa-plus"></i> Novo</a>
-        </div>
-    </div>
-    <div class="card-body">
-        <form method="POST" id="instructor-form">
-            {% csrf_token %}
-
-            <div class="row">
-                <div class="col-md-7">
-                    <div class="form-group">
-                        <label for="instructor-name">Nome do instrutor</label>
-                        {% render_field instructor_form.name type="text" class="form-control" id="instructor-name" placeholder="Insira o nome do instrutor" %}
-                    </div>
-                </div>
-                <div class="col-md-5">
-                    <div class="form-group">
-                        <label for="instructor-email">Email</label>
-                        {% render_field instructor_form.email type="email" class="form-control" id="instructor-email" placeholder="Insira o email" %}
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="form-group">
-                        <label for="instructor-rg">RG</label>
-                        {% render_field instructor_form.rg type="text" minlength="12" class="form-control" id="instructor-rg" placeholder="Insira o RG" %}
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="form-group">
-                        <label for="instructor-cpf">CPF</label>
-                        {% render_field instructor_form.cpf type="text" minlength="14" class="form-control" id="instructor-cpf" placeholder="Insira o CPF" %}
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="form-group">
-                        <label for="instructor-phone1">Telefone 1</label>
-                        {% render_field instructor_form.primary_phone type="text" minlength="14" class="form-control" id="instructor-phone1" placeholder="Telefone principal" %}
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="form-group">
-                        <label for="class-phone2">Telefone 2</label>
-                        {% render_field instructor_form.secondary_phone type="text" minlength="14" class="form-control" id="instructor-phone2" placeholder="Telefone secundário" %}
-                    </div>
-                </div>
-
-                <div class="col-md-12 text-right mt-4">
-                    <button type="submit" type="reset" onclick="clear_instructors_form()" class="btn btn-secondary">
-                        <i class="fas fa-eraser"></i> Limpar
-                    </button>
-                    <button type="submit" type="submit" class="btn btn-success">Salvar</button>
-                </div>
-            </div>
-        </form>
-    </div>
-</div>
 
 <div class="card card-primary card-outline">
     <div class="card-header">
-        <h5 class="card-title my-auto">Documentação</h5>
+        <h5 class="card-title my-auto">Análise de documentação do aluno</h5>
         <div class="card-tools">
-            {% if instructor.ready_documents %}
-                <a href={% url 'ready_documents' instructor.id 0 %} class="btn btn-warning"><i class="fas fa-clock"></i> Marcar como pendente</a>
+            {% if student.ready_documents %}
+            <a href={% url 'ready_documents' student.id 0 %} class="btn btn-warning"><i class="fas fa-clock"></i> </a>
             {% else %}
-                <a href={% url 'ready_documents' instructor.id 1 %} class="btn btn-success"><i class="fas fa-check"></i> Marcar como entregue</a>
+            <a href={% url 'ready_documents' student.id 1 %} class="btn btn-success"><i class="fas fa-check"></i>
+                Aprovar todos</a>
             {% endif %}
         </div>
     </div>
     <div class="card-body">
-        <form class="files" action={% url 'upload_instructor_document' %} method="POST" enctype="multipart/form-data">
+        <form action={% url 'status_update' student.id %} method="POST" id="status_doc_update">
             {% csrf_token %}
 
-            <input type="hidden" name="instructor" id="instructor" value="{{ instructor.id }}">
-
+            <input type="hidden" name="student" value="{{ student.id }}">
             <div class="row">
                 <div class="col-md-12">
-                    <div class="form-group">
-                        <label for="doc-as">Documento de identidade</label>
-                        <div class="row">
-                            <div class="col-md-1">
-                                {% if documents.identity %}
-                                <div class="circle sent shadow mx-auto my-2" data-toggle="tooltip" data-placement="top"
-                                    title="Enviado!"></div>
-                                {% else %}
-                                <div class="circle shadow mx-auto my-2" data-toggle="tooltip" data-placement="top"
-                                    title="Pendente"></div>
-                                {% endif %}
-                            </div>
-                            <div class="custom-file col-md-7">
-                                <input type="file" name="identity" class="custom-file-input" id="doc-rg">
-                                <label class="custom-file-label" for="doc-rg">
-                                    {% if documents.identity %} {{ documents.identity.name }} {% else %} Insira o
-                                    documento de identidade {% endif %}
-                                </label>
-                            </div>
-                            <div class="col-md-4">
-                                <button type="submit" class="btn btn-success">
-                                    <i class="fas fa-upload "></i>
-                                    {% if documents.identity %}
-                                    Substituir
-                                    {% else %}
-                                    Enviar
-                                    {% endif %}
-                                </button>
-                                {% if documents.identity %}
-                                <a href="{{ documents.identity.url }}" class="btn btn-info" target="_blank">
-                                    <i class="fas fa-file"></i>
-                                    Abrir documento
-                                </a>
-                                {% endif %}
-                            </div>
-                        </div>
-                    </div>
+                    <h5>Ficha de inscrição</h5>
+                    <p>
+                        <i class="fas fa-info-circle" aria-hidden="true"></i>
+                        Baixe aqui a ficha de inscrição do aluno com as informações preenchidas no cadastro. (SEM
+                        ASSINATURA)
+                    </p>
+                    <a href="/media/student/{{student.id}}/ficha_cadastral_tramite.pdf" class="btn btn-success"
+                        download>
+                        <i class="fas fa-download" aria-hidden="true"></i>
+                        Baixar ficha sem assinatura
+                    </a>
                 </div>
 
-                <div class="col-md-12">
-                    <div class="form-group">
-                        <label for="doc-residencia">Comprovante de residência</label>
-                        <div class="row">
-                            <div class="col-md-1">
-                                {% if documents.residence %}
-                                <div class="circle sent shadow mx-auto my-2" data-toggle="tooltip" data-placement="top"
-                                    title="Enviado!"></div>
-                                {% else %}
-                                <div class="circle shadow mx-auto my-2" data-toggle="tooltip" data-placement="top"
-                                    title="Pendente"></div>
-                                {% endif %}
-                            </div>
-                            <div class="custom-file col-md-7">
-                                <input type="file" name="residence" class="custom-file-input" id="doc-residencia">
-                                <label class="custom-file-label" for="doc-residencia">
-                                    {% if documents.residence %}
-                                    {{ documents.residence.name }}
-                                    {% else %}
-                                    Insira o comprovante de residência
-                                    {% endif %}
-                                </label>
-                            </div>
-                            <div class="col-md-4">
-                                <button type="submit" class="btn btn-success">
-                                    <i class="fas fa-upload "></i>
-                                    {% if documents.residence %}
-                                    Substituir
-                                    {% else %}
-                                    Enviar
-                                    {% endif %}
+                <!-- registration -->
+                <div class="col-md-12 divisor mt-3 divisor mt-4">
+                    <label for="doc-registration_form">Ficha de matrícula</label>
 
-                                </button>
-                                {% if documents.residence %}
-                                <a href="{{ documents.residence.url }}" class="btn btn-info" target="_blank">
-                                    <i class="fas fa-file"></i>
-                                    Abrir documento
-                                </a>
-                                {% endif %}
-                            </div>
+                    {% if documents.registration_form %}
+                    <div class="row" id="edit-registration_form">
+                        <div class="col-md-9">
+                            {% if status.registration_form == 'APROVADO' %}
+                            <p class="text-success text-bold">
+                                <i class="fas fa-check" aria-hidden="true"></i>
+                                {{status.registration_form_name}}
+                            </p>
+                            {% elif status.registration_form == 'RECUSADO' %}
+                            <p class="text-danger text-bold">
+                                <i class="fas fa-times" aria-hidden="true"></i>
+                                {{status.registration_form_name}}
+                            </p>
+                            {% else %}
+                            <p class="text-warning text-bold">
+                                <i class="fas fa-clock" aria-hidden="true"></i>
+                                {{status.registration_form_name}}
+                            </p>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-3 text-right">
+                            <a target="_blank" href="{{ documents.registration_form.url }}" class="btn btn-info mb-3" onclick="">
+                                <i class="fas fa-file"></i>
+                                Visualizar
+                            </a>
+                            <button class="btn btn-success mb-3" onclick="update_field_status(this, event, 'APROVADO')">
+                                <i class="fas fa-check"></i>
+                            </button>
+                            <button class="btn btn-danger mb-3" onclick="update_field_status(this, event, 'RECUSADO')">
+                                <i class="fas fa-times"></i>
+                            </button>
+                            {% if status.registration_form %}
+                            <input type="hidden" name="registration_form" value="{{ status.registration_form }}">
+                            {% endif %}
                         </div>
                     </div>
+                    {% else %}
+                    <div class="row" id="edit-registration_form">
+                        <div class="col-md-9">
+                            <p class="text-muted text-bold">
+                                <i class="fas fa-clock" aria-hidden="true"></i>
+                                Aguardando envio...
+                            </p>
+                        </div>
+                        <div class="col-md-3">
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
 
-                    <div class="col-md-12">
+                <div class="col-md-12 text-right">
+                    <form action={% url 'save_observation' student.id %} method="post">
+                        {% csrf_token %}
+
                         <div class="form-group">
-                            <label for="doc-antecedentes">Antecedentes criminais</label>
-                            <div class="row">
-                                <div class="col-md-1">
-                                    {% if documents.criminal %}
-                                    <div class="circle sent shadow mx-auto my-2" data-toggle="tooltip"
-                                        data-placement="top" title="Enviado!"></div>
-                                    {% else %}
-                                    <div class="circle shadow mx-auto my-2" data-toggle="tooltip" data-placement="top"
-                                        title="Pendente"></div>
-                                    {% endif %}
-                                </div>
-                                <div class="custom-file col-md-7">
-                                    <input type="file" name="criminal" class="custom-file-input" id="doc-antecedentes">
-                                    <label class="custom-file-label" for="doc-antecedentes">
-                                        {% if documents.criminal %}
-                                        {{ documents.criminal.name }}
-                                        {% else %}
-                                        Insira o antecedentes
-                                        criminais
+                            {% render_field observation_form.registration_form_observation class="form-control" id="registration_form-comments" placeholder="Escreva aqui uma observação para a documentação do seu aluno." rows="3" %}
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save" aria-hidden="true"></i>
+                            Salvar
+                        </button>
+                    </form>
+                </div>
 
-                                        {% endif %}
-                                    </label>
-                                </div>
-                                <div class="col-md-4">
-                                    <button type="submit" class="btn btn-success">
-                                        <i class="fas fa-upload "></i>
-                                        {% if documents.criminal %}
-                                        Substituir
-                                        {% else %}
-                                        Enviar
-                                        {% endif %}
+                <!-- identity -->
+                <div class="col-md-12 divisor mt-3">
+                    <label for="doc-identity">Documento de identidade (RG e CPF)</label>
 
-                                    </button>
-                                    {% if documents.criminal %}
-                                    <a href="{{ documents.criminal.url }}" class="btn btn-info" target="_blank">
-                                        <i class="fas fa-file"></i>
-                                        Abrir documento
-                                    </a>
-                                    {% endif %}
-                                </div>
-                            </div>
+                    {% if documents.identity %}
+                    <div class="row" id="edit-identity">
+                        <div class="col-md-9">
+                            {% if status.identity == 'APROVADO' %}
+                            <p class="text-success text-bold">
+                                <i class="fas fa-check" aria-hidden="true"></i>
+                                {{status.identity_name}}
+                            </p>
+                            {% elif status.identity == 'RECUSADO' %}
+                            <p class="text-danger text-bold">
+                                <i class="fas fa-times" aria-hidden="true"></i>
+                                {{status.identity_name}}
+                            </p>
+                            {% else %}
+                            <p class="text-warning text-bold">
+                                <i class="fas fa-clock" aria-hidden="true"></i>
+                                {{status.identity_name}}
+                            </p>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-3 text-right">
+                            <a target="_blank" href="{{ documents.identity.url }}" class="btn btn-info mb-3" onclick="">
+                                <i class="fas fa-file"></i>
+                                Visualizar
+                            </a>
+                            <button class="btn btn-success mb-3" onclick="update_field_status(this, event, 'APROVADO')">
+                                <i class="fas fa-check"></i>
+                            </button>
+                            <button class="btn btn-danger mb-3" onclick="update_field_status(this, event, 'RECUSADO')">
+                                <i class="fas fa-times"></i>
+                            </button>
+                            {% if status.identity %}
+                            <input type="hidden" name="identity" value="{{ status.identity }}">
+                            {% endif %}
                         </div>
                     </div>
+                    {% else %}
+                    <div class="row" id="edit-identity">
+                        <div class="col-md-9">
+                            <p class="text-muted text-bold">
+                                <i class="fas fa-clock" aria-hidden="true"></i>
+                                Aguardando envio...
+                            </p>
+                        </div>
+                        <div class="col-md-3">
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
 
-                    <div class="col-md-12">
+                <div class="col-md-12 text-right">
+                    <form action={% url 'save_observation' student.id %} method="post">
+                        {% csrf_token %}
+
                         <div class="form-group">
-                            <label for="doc-curriculo">Currículo profissional</label>
-                            <div class="row">
-                                <div class="col-md-1">
-                                    {% if documents.curriculum %}
-                                    <div class="circle sent shadow mx-auto my-2" data-toggle="tooltip"
-                                        data-placement="top" title="Enviado!"></div>
-                                    {% else %}
-                                    <div class="circle shadow mx-auto my-2" data-toggle="tooltip" data-placement="top"
-                                        title="Pendente"></div>
-                                    {% endif %}
-                                </div>
-                                <div class="custom-file col-md-7">
-                                    <input type="file" name="curriculum" class="custom-file-input" id="doc-curriculo">
-                                    <label class="custom-file-label" for="doc-curriculo">
-                                        {% if documents.curriculum %}
-                                        {{ documents.curriculum.name }}
-                                        {% else %}
-                                        Insira o currículo
-                                        profissional
+                            {% render_field observation_form.identity_observation class="form-control" id="identity-comments" placeholder="Escreva aqui uma observação para a documentação do seu aluno." rows="3" %}
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save" aria-hidden="true"></i>
+                            Salvar
+                        </button>
+                    </form>
+                </div>
 
-                                        {% endif %}
-                                    </label>
-                                </div>
-                                <div class="col-md-4">
-                                    <button type="submit" class="btn btn-success">
-                                        <i class="fas fa-upload "></i>
-                                        {% if documents.curriculum %}
-                                        Substituir
-                                        {% else %}
-                                        Enviar
-                                        {% endif %}
+                <!-- cnh -->
+                <div class="col-md-12 divisor mt-3">
+                    <label for="doc-cnh">Carteira Nacional de Habilitação (CNH)</label>
 
-                                    </button>
-                                    {% if documents.curriculum %}
-                                    <a href="{{ documents.curriculum.url }}" class="btn btn-info" target="_blank">
-                                        <i class="fas fa-file"></i>
-                                        Abrir documento
-                                    </a>
-                                    {% endif %}
-                                </div>
-                            </div>
+                    {% if documents.cnh %}
+                    <div class="row" id="edit-cnh">
+                        <div class="col-md-9">
+                            {% if status.cnh == 'APROVADO' %}
+                            <p class="text-success text-bold">
+                                <i class="fas fa-check" aria-hidden="true"></i>
+                                {{status.cnh_name}}
+                            </p>
+                            {% elif status.cnh == 'RECUSADO' %}
+                            <p class="text-danger text-bold">
+                                <i class="fas fa-times" aria-hidden="true"></i>
+                                {{status.cnh_name}}
+                            </p>
+                            {% else %}
+                            <p class="text-warning text-bold">
+                                <i class="fas fa-clock" aria-hidden="true"></i>
+                                {{status.cnh_name}}
+                            </p>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-3 text-right">
+                            <a target="_blank" href="{{ documents.cnh.url }}" class="btn btn-info mb-3" onclick="">
+                                <i class="fas fa-file"></i>
+                                Visualizar
+                            </a>
+                            <button class="btn btn-success mb-3" onclick="update_field_status(this, event, 'APROVADO')">
+                                <i class="fas fa-check"></i>
+                            </button>
+                            <button class="btn btn-danger mb-3" onclick="update_field_status(this, event, 'RECUSADO')">
+                                <i class="fas fa-times"></i>
+                            </button>
+                            {% if status.cnh %}
+                            <input type="hidden" name="cnh" value="{{ status.cnh }}">
+                            {% endif %}
                         </div>
                     </div>
+                    {% else %}
+                    <div class="row" id="edit-cnh">
+                        <div class="col-md-9">
+                            <p class="text-muted text-bold">
+                                <i class="fas fa-clock" aria-hidden="true"></i>
+                                Aguardando envio...
+                            </p>
+                        </div>
+                        <div class="col-md-3">
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
 
-                    <div class="col-md-12">
+                <div class="col-md-12 text-right">
+                    <form action={% url 'save_observation' student.id %} method="post">
+                        {% csrf_token %}
+
                         <div class="form-group">
-                            <label for="doc-questionario">Questionário de entrevista</label>
-                            <div class="row">
-                                <div class="col-md-1">
-                                    {% if documents.interview_quests %}
-                                    <div class="circle sent shadow mx-auto my-2" data-toggle="tooltip"
-                                        data-placement="top" title="Enviado!"></div>
-                                    {% else %}
-                                    <div class="circle shadow mx-auto my-2" data-toggle="tooltip" data-placement="top"
-                                        title="Pendente"></div>
-                                    {% endif %}
-                                </div>
-                                <div class="custom-file col-md-7">
-                                    <input type="file" name="interview_quests" class="custom-file-input"
-                                        id="doc-questionario">
-                                    <label class="custom-file-label" for="doc-questionario">
-                                        {% if documents.interview_quests %}
-                                        {{ documents.interview_quests.name }}
-                                        {% else %}
-                                        Insira o questionário de
-                                        entrevista
+                            {% render_field observation_form.cnh_observation class="form-control" id="cnh-comments" placeholder="Escreva aqui uma observação para a documentação do seu aluno." rows="3" %}
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save" aria-hidden="true"></i>
+                            Salvar
+                        </button>
+                    </form>
+                </div>
 
-                                        {% endif %}
-                                    </label>
-                                </div>
-                                <div class="col-md-4">
-                                    <button type="submit" class="btn btn-success">
-                                        <i class="fas fa-upload "></i>
-                                        {% if documents.interview_quests %}
-                                        Substituir
-                                        {% else %}
-                                        Enviar
-                                        {% endif %}
+                <!-- criminal -->
+                <div class="col-md-12 divisor mt-3">
+                    <label for="doc-criminal">Certidão Criminal do Tribunal de Justiça Estadual</label>
 
-                                    </button>
-                                    {% if documents.interview_quests %}
-                                    <a href="{{ documents.interview_quests.url }}" class="btn btn-info" target="_blank">
-                                        <i class="fas fa-file"></i>
-                                        Abrir documento
-                                    </a>
-                                    {% endif %}
-                                </div>
-                            </div>
+                    {% if documents.criminal %}
+                    <div class="row" id="edit-criminal">
+                        <div class="col-md-9">
+                            {% if status.criminal == 'APROVADO' %}
+                            <p class="text-success text-bold">
+                                <i class="fas fa-check" aria-hidden="true"></i>
+                                {{status.criminal_name}}
+                            </p>
+                            {% elif status.criminal == 'RECUSADO' %}
+                            <p class="text-danger text-bold">
+                                <i class="fas fa-times" aria-hidden="true"></i>
+                                {{status.criminal_name}}
+                            </p>
+                            {% else %}
+                            <p class="text-warning text-bold">
+                                <i class="fas fa-clock" aria-hidden="true"></i>
+                                {{status.criminal_name}}
+                            </p>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-3 text-right">
+                            <a target="_blank" href="{{ documents.criminal.url }}" class="btn btn-info mb-3" onclick="">
+                                <i class="fas fa-file"></i>
+                                Visualizar
+                            </a>
+                            <button class="btn btn-success mb-3" onclick="update_field_status(this, event, 'APROVADO')">
+                                <i class="fas fa-check"></i>
+                            </button>
+                            <button class="btn btn-danger mb-3" onclick="update_field_status(this, event, 'RECUSADO')">
+                                <i class="fas fa-times"></i>
+                            </button>
+                            {% if status.criminal %}
+                            <input type="hidden" name="criminal" value="{{ status.criminal }}">
+                            {% endif %}
                         </div>
                     </div>
+                    {% else %}
+                    <div class="row" id="edit-criminal">
+                        <div class="col-md-9">
+                            <p class="text-muted text-bold">
+                                <i class="fas fa-clock" aria-hidden="true"></i>
+                                Aguardando envio...
+                            </p>
+                        </div>
+                        <div class="col-md-3">
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
 
-                    <div class="col-md-12">
+                <div class="col-md-12 text-right">
+                    <form action={% url 'save_observation' student.id %} method="post">
+                        {% csrf_token %}
+
                         <div class="form-group">
-                            <label for="doc-exames">Exames ou laudos médicos</label>
-                            <div class="row">
-                                <div class="col-md-1">
-                                    {% if documents.exams %}
-                                    <div class="circle sent shadow mx-auto my-2" data-toggle="tooltip"
-                                        data-placement="top" title="Enviado!"></div>
-                                    {% else %}
-                                    <div class="circle shadow mx-auto my-2" data-toggle="tooltip" data-placement="top"
-                                        title="Pendente"></div>
-                                    {% endif %}
-                                </div>
-                                <div class="custom-file col-md-7">
-                                    <input type="file" name="exams" class="custom-file-input" id="doc-exames">
-                                    <label class="custom-file-label" for="doc-exames">
-                                        {% if documents.exams %}
-                                        {{ documents.exams.name }}
-                                        {% else %}
-                                        Insira os exames ou laudos
-                                        médicos
+                            {% render_field observation_form.criminal_observation class="form-control" id="criminal-comments" placeholder="Escreva aqui uma observação para a documentação do seu aluno." rows="3" %}
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save" aria-hidden="true"></i>
+                            Salvar
+                        </button>
+                    </form>
+                </div>
 
-                                        {% endif %}
-                                    </label>
-                                </div>
-                                <div class="col-md-4">
-                                    <button type="submit" class="btn btn-success">
-                                        <i class="fas fa-upload "></i>
-                                        {% if documents.exams %}
-                                        Substituir
-                                        {% else %}
-                                        Enviar
-                                        {% endif %}
+                <!-- distribution_criminal -->
+                <div class="col-md-12 divisor mt-3">
+                    <label for="doc-distribution_criminal">Certidão de Distribuição para Fins Gerais do Tribunal de Justiça Federal</label>
 
-                                    </button>
-                                    {% if documents.exams %}
-                                    <a href="{{ documents.exams.url }}" class="btn btn-info" target="_blank">
-                                        <i class="fas fa-file"></i>
-                                        Abrir documento
-                                    </a>
-                                    {% endif %}
-                                </div>
-                            </div>
+                    {% if documents.distribution_criminal %}
+                    <div class="row" id="edit-distribution_criminal">
+                        <div class="col-md-9">
+                            {% if status.distribution_criminal == 'APROVADO' %}
+                            <p class="text-success text-bold">
+                                <i class="fas fa-check" aria-hidden="true"></i>
+                                {{status.distribution_criminal_name}}
+                            </p>
+                            {% elif status.distribution_criminal == 'RECUSADO' %}
+                            <p class="text-danger text-bold">
+                                <i class="fas fa-times" aria-hidden="true"></i>
+                                {{status.distribution_criminal_name}}
+                            </p>
+                            {% else %}
+                            <p class="text-warning text-bold">
+                                <i class="fas fa-clock" aria-hidden="true"></i>
+                                {{status.distribution_criminal_name}}
+                            </p>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-3 text-right">
+                            <a target="_blank" href="{{ documents.distribution_criminal.url }}" class="btn btn-info mb-3" onclick="">
+                                <i class="fas fa-file"></i>
+                                Visualizar
+                            </a>
+                            <button class="btn btn-success mb-3" onclick="update_field_status(this, event, 'APROVADO')">
+                                <i class="fas fa-check"></i>
+                            </button>
+                            <button class="btn btn-danger mb-3" onclick="update_field_status(this, event, 'RECUSADO')">
+                                <i class="fas fa-times"></i>
+                            </button>
+                            {% if status.distribution_criminal %}
+                            <input type="hidden" name="distribution_criminal" value="{{ status.distribution_criminal }}">
+                            {% endif %}
                         </div>
                     </div>
+                    {% else %}
+                    <div class="row" id="edit-distribution_criminal">
+                        <div class="col-md-9">
+                            <p class="text-muted text-bold">
+                                <i class="fas fa-clock" aria-hidden="true"></i>
+                                Aguardando envio...
+                            </p>
+                        </div>
+                        <div class="col-md-3">
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
 
-                    <div class="col-md-12">
+                <div class="col-md-12 text-right">
+                    <form action={% url 'save_observation' student.id %} method="post">
+                        {% csrf_token %}
+
                         <div class="form-group">
-                            <label for="doc-testes">Testes de conhecimentos (se aplicado)</label>
-                            <div class="row">
-                                <div class="col-md-1">
-                                    {% if documents.tests %}
-                                    <div class="circle sent shadow mx-auto my-2" data-toggle="tooltip"
-                                        data-placement="top" title="Enviado!"></div>
-                                    {% else %}
-                                    <div class="circle shadow mx-auto my-2" data-toggle="tooltip" data-placement="top"
-                                        title="Pendente"></div>
-                                    {% endif %}
-                                </div>
-                                <div class="custom-file col-md-7">
-                                    <input type="file" name="tests" class="custom-file-input" id="doc-testes">
-                                    <label class="custom-file-label" for="doc-testes">
-                                        {% if documents.tests %}
-                                        {{ documents.tests.name }}
-                                        {% else %}
-                                        Insira os testes de
-                                        conhecimentos
+                            {% render_field observation_form.distribution_criminal_observation class="form-control" id="distribution_criminal-comments" placeholder="Escreva aqui uma observação para a documentação do seu aluno." rows="3" %}
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save" aria-hidden="true"></i>
+                            Salvar
+                        </button>
+                    </form>
+                </div>
 
-                                        {% endif %}
-                                    </label>
-                                </div>
-                                <div class="col-md-4">
-                                    <button type="submit" class="btn btn-success">
-                                        <i class="fas fa-upload "></i>
-                                        {% if documents.tests %}
-                                        Substituir
-                                        {% else %}
-                                        Enviar
-                                        {% endif %}
-                                    </button>
-                                    {% if documents.tests %}
-                                    <a href="{{ documents.tests.url }}" class="btn btn-info" target="_blank">
-                                        <i class="fas fa-file"></i>
-                                        Abrir documento
-                                    </a>
-                                    {% endif %}
-                                </div>
-                            </div>
+                <!-- basic_avsec_certificate -->
+                <div class="col-md-12 divisor mt-3">
+                    <label for="doc-basic_avsec_certificate">Certificado do curso Básico Avsec</label>
+
+                    {% if documents.basic_avsec_certificate %}
+                    <div class="row" id="edit-basic_avsec_certificate">
+                        <div class="col-md-9">
+                            {% if status.basic_avsec_certificate == 'APROVADO' %}
+                            <p class="text-success text-bold">
+                                <i class="fas fa-check" aria-hidden="true"></i>
+                                {{status.basic_avsec_certificate_name}}
+                            </p>
+                            {% elif status.basic_avsec_certificate == 'RECUSADO' %}
+                            <p class="text-danger text-bold">
+                                <i class="fas fa-times" aria-hidden="true"></i>
+                                {{status.basic_avsec_certificate_name}}
+                            </p>
+                            {% else %}
+                            <p class="text-warning text-bold">
+                                <i class="fas fa-clock" aria-hidden="true"></i>
+                                {{status.basic_avsec_certificate_name}}
+                            </p>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-3 text-right">
+                            <a target="_blank" href="{{ documents.basic_avsec_certificate.url }}" class="btn btn-info mb-3" onclick="">
+                                <i class="fas fa-file"></i>
+                                Visualizar
+                            </a>
+                            <button class="btn btn-success mb-3" onclick="update_field_status(this, event, 'APROVADO')">
+                                <i class="fas fa-check"></i>
+                            </button>
+                            <button class="btn btn-danger mb-3" onclick="update_field_status(this, event, 'RECUSADO')">
+                                <i class="fas fa-times"></i>
+                            </button>
+                            {% if status.basic_avsec_certificate %}
+                            <input type="hidden" name="basic_avsec_certificate" value="{{ status.basic_avsec_certificate }}">
+                            {% endif %}
                         </div>
                     </div>
+                    {% else %}
+                    <div class="row" id="edit-basic_avsec_certificate">
+                        <div class="col-md-9">
+                            <p class="text-muted text-bold">
+                                <i class="fas fa-clock" aria-hidden="true"></i>
+                                Aguardando envio...
+                            </p>
+                        </div>
+                        <div class="col-md-3">
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
 
-                    <div class="col-md-12">
+                <div class="col-md-12 text-right">
+                    <form action={% url 'save_observation' student.id %} method="post">
+                        {% csrf_token %}
+
                         <div class="form-group">
-                            <label for="doc-historico">Histórico escolar</label>
-                            <div class="row">
-                                <div class="col-md-1">
-                                    {% if documents.scholar_history %}
-                                    <div class="circle sent shadow mx-auto my-2" data-toggle="tooltip"
-                                        data-placement="top" title="Enviado!"></div>
-                                    {% else %}
-                                    <div class="circle shadow mx-auto my-2" data-toggle="tooltip" data-placement="top"
-                                        title="Pendente"></div>
-                                    {% endif %}
-                                </div>
-                                <div class="custom-file col-md-7">
-                                    <input type="file" name="scholar_history" class="custom-file-input"
-                                        id="doc-historico">
-                                    <label class="custom-file-label" for="doc-historico">
-                                        {% if documents.scholar_history %}
-                                        {{ documents.scholar_history.name }}
-                                        {% else %}
-                                        Insira o histórico
-                                        escolar
+                            {% render_field observation_form.basic_avsec_certificate_observation class="form-control" id="basic_avsec_certificate-comments" placeholder="Escreva aqui uma observação para a documentação do seu aluno." rows="3" %}
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save" aria-hidden="true"></i>
+                            Salvar
+                        </button>
+                    </form>
+                </div>
 
-                                        {% endif %}
-                                    </label>
-                                </div>
-                                <div class="col-md-4">
-                                    <button type="submit" class="btn btn-success">
-                                        <i class="fas fa-upload "></i>
-                                        {% if documents.scholar_history %}
-                                        Substituir
-                                        {% else %}
-                                        Enviar
-                                        {% endif %}
+                <!-- cnv -->
+                <div class="col-md-12 divisor mt-3">
+                    <label for="doc-cnv">Carteira Nacional de Vigilante (CNV)</label>
 
-                                    </button>
-                                    {% if documents.scholar_history %}
-                                    <a href="{{ documents.scholar_history.url }}" class="btn btn-info" target="_blank">
-                                        <i class="fas fa-file"></i>
-                                        Abrir documento
-                                    </a>
-                                    {% endif %}
-                                </div>
-                            </div>
+                    {% if documents.cnv %}
+                    <div class="row" id="edit-cnv">
+                        <div class="col-md-9">
+                            {% if status.cnv == 'APROVADO' %}
+                            <p class="text-success text-bold">
+                                <i class="fas fa-check" aria-hidden="true"></i>
+                                {{status.cnv_name}}
+                            </p>
+                            {% elif status.cnv == 'RECUSADO' %}
+                            <p class="text-danger text-bold">
+                                <i class="fas fa-times" aria-hidden="true"></i>
+                                {{status.cnv_name}}
+                            </p>
+                            {% else %}
+                            <p class="text-warning text-bold">
+                                <i class="fas fa-clock" aria-hidden="true"></i>
+                                {{status.cnv_name}}
+                            </p>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-3 text-right">
+                            <a target="_blank" href="{{ documents.cnv.url }}" class="btn btn-info mb-3" onclick="">
+                                <i class="fas fa-file"></i>
+                                Visualizar
+                            </a>
+                            <button class="btn btn-success mb-3" onclick="update_field_status(this, event, 'APROVADO')">
+                                <i class="fas fa-check"></i>
+                            </button>
+                            <button class="btn btn-danger mb-3" onclick="update_field_status(this, event, 'RECUSADO')">
+                                <i class="fas fa-times"></i>
+                            </button>
+                            {% if status.cnv %}
+                            <input type="hidden" name="cnv" value="{{ status.cnv }}">
+                            {% endif %}
                         </div>
                     </div>
+                    {% else %}
+                    <div class="row" id="edit-cnv">
+                        <div class="col-md-9">
+                            <p class="text-muted text-bold">
+                                <i class="fas fa-clock" aria-hidden="true"></i>
+                                Aguardando envio...
+                            </p>
+                        </div>
+                        <div class="col-md-3">
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
 
+                <div class="col-md-12 text-right">
+                    <form action={% url 'save_observation' student.id %} method="post">
+                        {% csrf_token %}
+
+                        <div class="form-group">
+                            {% render_field observation_form.cnv_observation class="form-control" id="cnv-comments" placeholder="Escreva aqui uma observação para a documentação do seu aluno." rows="3" %}
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save" aria-hidden="true"></i>
+                            Salvar
+                        </button>
+                    </form>
+                </div>
+
+                <!-- pilot_license -->
+                <div class="col-md-12 divisor mt-3">
+                    <label for="doc-pilot_license">Habilitação de piloto ou comissaria</label>
+
+                    {% if documents.pilot_license %}
+                    <div class="row" id="edit-pilot_license">
+                        <div class="col-md-9">
+                            {% if status.pilot_license == 'APROVADO' %}
+                            <p class="text-success text-bold">
+                                <i class="fas fa-check" aria-hidden="true"></i>
+                                {{status.pilot_license_name}}
+                            </p>
+                            {% elif status.pilot_license == 'RECUSADO' %}
+                            <p class="text-danger text-bold">
+                                <i class="fas fa-times" aria-hidden="true"></i>
+                                {{status.pilot_license_name}}
+                            </p>
+                            {% else %}
+                            <p class="text-warning text-bold">
+                                <i class="fas fa-clock" aria-hidden="true"></i>
+                                {{status.pilot_license_name}}
+                            </p>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-3 text-right">
+                            <a target="_blank" href="{{ documents.pilot_license.url }}" class="btn btn-info mb-3" onclick="">
+                                <i class="fas fa-file"></i>
+                                Visualizar
+                            </a>
+                            <button class="btn btn-success mb-3" onclick="update_field_status(this, event, 'APROVADO')">
+                                <i class="fas fa-check"></i>
+                            </button>
+                            <button class="btn btn-danger mb-3" onclick="update_field_status(this, event, 'RECUSADO')">
+                                <i class="fas fa-times"></i>
+                            </button>
+                            {% if status.pilot_license %}
+                            <input type="hidden" name="pilot_license" value="{{ status.pilot_license }}">
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="row" id="edit-pilot_license">
+                        <div class="col-md-9">
+                            <p class="text-muted text-bold">
+                                <i class="fas fa-clock" aria-hidden="true"></i>
+                                Aguardando envio...
+                            </p>
+                        </div>
+                        <div class="col-md-3">
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <div class="col-md-12 text-right">
+                    <form action={% url 'save_observation' student.id %} method="post">
+                        {% csrf_token %}
+
+                        <div class="form-group">
+                            {% render_field observation_form.pilot_license_observation class="form-control" id="pilot_license-comments" placeholder="Escreva aqui uma observação para a documentação do seu aluno." rows="3" %}
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save" aria-hidden="true"></i>
+                            Salvar
+                        </button>
+                    </form>
+                </div>
+
+                <!-- forwarding_in_service -->
+                <div class="col-md-12 divisor mt-3">
+                    <label for="doc-forwarding_in_service">Carta de encaminhamento em serviço</label>
+
+                    {% if documents.forwarding_in_service %}
+                    <div class="row" id="edit-forwarding_in_service">
+                        <div class="col-md-9">
+                            {% if status.forwarding_in_service == 'APROVADO' %}
+                            <p class="text-success text-bold">
+                                <i class="fas fa-check" aria-hidden="true"></i>
+                                {{status.forwarding_in_service_name}}
+                            </p>
+                            {% elif status.forwarding_in_service == 'RECUSADO' %}
+                            <p class="text-danger text-bold">
+                                <i class="fas fa-times" aria-hidden="true"></i>
+                                {{status.forwarding_in_service_name}}
+                            </p>
+                            {% else %}
+                            <p class="text-warning text-bold">
+                                <i class="fas fa-clock" aria-hidden="true"></i>
+                                {{status.forwarding_in_service_name}}
+                            </p>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-3 text-right">
+                            <a target="_blank" href="{{ documents.forwarding_in_service.url }}" class="btn btn-info mb-3" onclick="">
+                                <i class="fas fa-file"></i>
+                                Visualizar
+                            </a>
+                            <button class="btn btn-success mb-3" onclick="update_field_status(this, event, 'APROVADO')">
+                                <i class="fas fa-check"></i>
+                            </button>
+                            <button class="btn btn-danger mb-3" onclick="update_field_status(this, event, 'RECUSADO')">
+                                <i class="fas fa-times"></i>
+                            </button>
+                            {% if status.forwarding_in_service %}
+                            <input type="hidden" name="forwarding_in_service" value="{{ status.forwarding_in_service }}">
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="row" id="edit-forwarding_in_service">
+                        <div class="col-md-9">
+                            <p class="text-muted text-bold">
+                                <i class="fas fa-clock" aria-hidden="true"></i>
+                                Aguardando envio...
+                            </p>
+                        </div>
+                        <div class="col-md-3">
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <div class="col-md-12 text-right">
+                    <form action={% url 'save_observation' student.id %} method="post">
+                        {% csrf_token %}
+
+                        <div class="form-group">
+                            {% render_field observation_form.forwarding_in_service_observation class="form-control" id="forwarding_in_service-comments" placeholder="Escreva aqui uma observação para a documentação do seu aluno." rows="3" %}
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save" aria-hidden="true"></i>
+                            Salvar
+                        </button>
+                    </form>
+                </div>
+
+                <!-- work_card -->
+                <div class="col-md-12 divisor mt-3">
+                    <label for="doc-work_card">Cópia da carteira de trabalho</label>
+
+                    {% if documents.work_card %}
+                    <div class="row" id="edit-work_card">
+                        <div class="col-md-9">
+                            {% if status.work_card == 'APROVADO' %}
+                            <p class="text-success text-bold">
+                                <i class="fas fa-check" aria-hidden="true"></i>
+                                {{status.work_card_name}}
+                            </p>
+                            {% elif status.work_card == 'RECUSADO' %}
+                            <p class="text-danger text-bold">
+                                <i class="fas fa-times" aria-hidden="true"></i>
+                                {{status.work_card_name}}
+                            </p>
+                            {% else %}
+                            <p class="text-warning text-bold">
+                                <i class="fas fa-clock" aria-hidden="true"></i>
+                                {{status.work_card_name}}
+                            </p>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-3 text-right">
+                            <a target="_blank" href="{{ documents.work_card.url }}" class="btn btn-info mb-3" onclick="">
+                                <i class="fas fa-file"></i>
+                                Visualizar
+                            </a>
+                            <button class="btn btn-success mb-3" onclick="update_field_status(this, event, 'APROVADO')">
+                                <i class="fas fa-check"></i>
+                            </button>
+                            <button class="btn btn-danger mb-3" onclick="update_field_status(this, event, 'RECUSADO')">
+                                <i class="fas fa-times"></i>
+                            </button>
+                            {% if status.work_card %}
+                            <input type="hidden" name="work_card" value="{{ status.work_card }}">
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="row" id="edit-work_card">
+                        <div class="col-md-9">
+                            <p class="text-muted text-bold">
+                                <i class="fas fa-clock" aria-hidden="true"></i>
+                                Aguardando envio...
+                            </p>
+                        </div>
+                        <div class="col-md-3">
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <div class="col-md-12 text-right">
+                    <form action={% url 'save_observation' student.id %} method="post">
+                        {% csrf_token %}
+
+                        <div class="form-group">
+                            {% render_field observation_form.work_card_observation class="form-control" id="work_card-comments" placeholder="Escreva aqui uma observação para a documentação do seu aluno." rows="3" %}
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save" aria-hidden="true"></i>
+                            Salvar
+                        </button>
+                    </form>
+                </div>
+
+                <!-- avsec_certificate -->
+                <div class="col-md-12 divisor mt-3">
+                    <label for="doc-avsec_certificate">Certificado de formação Avsec</label>
+
+                    {% if documents.avsec_certificate %}
+                    <div class="row" id="edit-avsec_certificate">
+                        <div class="col-md-9">
+                            {% if status.avsec_certificate == 'APROVADO' %}
+                            <p class="text-success text-bold">
+                                <i class="fas fa-check" aria-hidden="true"></i>
+                                {{status.avsec_certificate_name}}
+                            </p>
+                            {% elif status.avsec_certificate == 'RECUSADO' %}
+                            <p class="text-danger text-bold">
+                                <i class="fas fa-times" aria-hidden="true"></i>
+                                {{status.avsec_certificate_name}}
+                            </p>
+                            {% else %}
+                            <p class="text-warning text-bold">
+                                <i class="fas fa-clock" aria-hidden="true"></i>
+                                {{status.avsec_certificate_name}}
+                            </p>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-3 text-right">
+                            <a target="_blank" href="{{ documents.avsec_certificate.url }}" class="btn btn-info mb-3" onclick="">
+                                <i class="fas fa-file"></i>
+                                Visualizar
+                            </a>
+                            <button class="btn btn-success mb-3" onclick="update_field_status(this, event, 'APROVADO')">
+                                <i class="fas fa-check"></i>
+                            </button>
+                            <button class="btn btn-danger mb-3" onclick="update_field_status(this, event, 'RECUSADO')">
+                                <i class="fas fa-times"></i>
+                            </button>
+                            {% if status.avsec_certificate %}
+                            <input type="hidden" name="avsec_certificate" value="{{ status.avsec_certificate }}">
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="row" id="edit-avsec_certificate">
+                        <div class="col-md-9">
+                            <p class="text-muted text-bold">
+                                <i class="fas fa-clock" aria-hidden="true"></i>
+                                Aguardando envio...
+                            </p>
+                        </div>
+                        <div class="col-md-3">
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <div class="col-md-12 text-right">
+                    <form action={% url 'save_observation' student.id %} method="post">
+                        {% csrf_token %}
+
+                        <div class="form-group">
+                            {% render_field observation_form.avsec_certificate_observation class="form-control" id="avsec_certificate-comments" placeholder="Escreva aqui uma observação para a documentação do seu aluno." rows="3" %}
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save" aria-hidden="true"></i>
+                            Salvar
+                        </button>
+                    </form>
+                </div>
+
+                <!-- certified_high_school -->
+                <div class="col-md-12 divisor mt-3">
+                    <label for="doc-certified_high_school">Comprovante de conclusão de ensino médio</label>
+
+                    {% if documents.certified_high_school %}
+                    <div class="row" id="edit-certified_high_school">
+                        <div class="col-md-9">
+                            {% if status.certified_high_school == 'APROVADO' %}
+                            <p class="text-success text-bold">
+                                <i class="fas fa-check" aria-hidden="true"></i>
+                                {{status.certified_high_school_name}}
+                            </p>
+                            {% elif status.certified_high_school == 'RECUSADO' %}
+                            <p class="text-danger text-bold">
+                                <i class="fas fa-times" aria-hidden="true"></i>
+                                {{status.certified_high_school_name}}
+                            </p>
+                            {% else %}
+                            <p class="text-warning text-bold">
+                                <i class="fas fa-clock" aria-hidden="true"></i>
+                                {{status.certified_high_school_name}}
+                            </p>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-3 text-right">
+                            <a target="_blank" href="{{ documents.certified_high_school.url }}" class="btn btn-info mb-3" onclick="">
+                                <i class="fas fa-file"></i>
+                                Visualizar
+                            </a>
+                            <button class="btn btn-success mb-3" onclick="update_field_status(this, event, 'APROVADO')">
+                                <i class="fas fa-check"></i>
+                            </button>
+                            <button class="btn btn-danger mb-3" onclick="update_field_status(this, event, 'RECUSADO')">
+                                <i class="fas fa-times"></i>
+                            </button>
+                            {% if status.certified_high_school %}
+                            <input type="hidden" name="certified_high_school" value="{{ status.certified_high_school }}">
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="row" id="edit-certified_high_school">
+                        <div class="col-md-9">
+                            <p class="text-muted text-bold">
+                                <i class="fas fa-clock" aria-hidden="true"></i>
+                                Aguardando envio...
+                            </p>
+                        </div>
+                        <div class="col-md-3">
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <div class="col-md-12 text-right">
+                    <form action={% url 'save_observation' student.id %} method="post">
+                        {% csrf_token %}
+
+                        <div class="form-group">
+                            {% render_field observation_form.certified_high_school_observation class="form-control" id="certified_high_school-comments" placeholder="Escreva aqui uma observação para a documentação do seu aluno." rows="3" %}
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save" aria-hidden="true"></i>
+                            Salvar
+                        </button>
+                    </form>
+                </div>
+
+                <!-- proof_of_address -->
+                <div class="col-md-12 divisor mt-3">
+                    <label for="doc-proof_of_address">Comprovante ou declaração de residência</label>
+
+                    {% if documents.proof_of_address %}
+                    <div class="row" id="edit-proof_of_address">
+                        <div class="col-md-9">
+                            {% if status.proof_of_address == 'APROVADO' %}
+                            <p class="text-success text-bold">
+                                <i class="fas fa-check" aria-hidden="true"></i>
+                                {{status.proof_of_address_name}}
+                            </p>
+                            {% elif status.proof_of_address == 'RECUSADO' %}
+                            <p class="text-danger text-bold">
+                                <i class="fas fa-times" aria-hidden="true"></i>
+                                {{status.proof_of_address_name}}
+                            </p>
+                            {% else %}
+                            <p class="text-warning text-bold">
+                                <i class="fas fa-clock" aria-hidden="true"></i>
+                                {{status.proof_of_address_name}}
+                            </p>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-3 text-right">
+                            <a target="_blank" href="{{ documents.proof_of_address.url }}" class="btn btn-info mb-3" onclick="">
+                                <i class="fas fa-file"></i>
+                                Visualizar
+                            </a>
+                            <button class="btn btn-success mb-3" onclick="update_field_status(this, event, 'APROVADO')">
+                                <i class="fas fa-check"></i>
+                            </button>
+                            <button class="btn btn-danger mb-3" onclick="update_field_status(this, event, 'RECUSADO')">
+                                <i class="fas fa-times"></i>
+                            </button>
+                            {% if status.proof_of_address %}
+                            <input type="hidden" name="proof_of_address" value="{{ status.proof_of_address }}">
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="row" id="edit-proof_of_address">
+                        <div class="col-md-9">
+                            <p class="text-muted text-bold">
+                                <i class="fas fa-clock" aria-hidden="true"></i>
+                                Aguardando envio...
+                            </p>
+                        </div>
+                        <div class="col-md-3">
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <div class="col-md-12 text-right">
+                    <form action={% url 'save_observation' student.id %} method="post">
+                        {% csrf_token %}
+
+                        <div class="form-group">
+                            {% render_field observation_form.proof_of_address_observation class="form-control" id="proof_of_address-comments" placeholder="Escreva aqui uma observação para a documentação do seu aluno." rows="3" %}
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save" aria-hidden="true"></i>
+                            Salvar
+                        </button>
+                    </form>
                 </div>
             </div>
         </form>
@@ -454,4 +931,4 @@
 </div>
 {% endblock content %}
 
-{% block script %} <script src="{% static 'instructor/js/instructor.js' %}"></script> {% endblock %}
+{% block script %} <script src="{% static 'student/js/student.js' %}"></script> {% endblock %}

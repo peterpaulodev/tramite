@@ -58,7 +58,7 @@ input[type=checkbox] {
     opacity: 1;
 }
 
-.custom-file-input:lang(en)~.custom-file-label::after {
+.custom-file-input~.custom-file-label::after {
     content: "Selecione" !important;
 }
 
@@ -73,4 +73,12 @@ input[type=checkbox] {
 
 .circle.sent {
     background: #28a745;
+}
+
+textarea {   /* for all text* area elements */
+    resize: none;
+}
+
+.normal-text-label > div > div > label{
+    font-weight: 400 !important;
 }
