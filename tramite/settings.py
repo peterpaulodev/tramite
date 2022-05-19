@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-oztw(86g_4b0v$)hyn#v*s13j!!1v$$b2s)2cw%7i=uz6z)&07
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'plataforma.tramiteaereo.com.br', 'http://plataforma.tramiteaereo.com.br', 'www.plataforma.tramiteaereo.com.br']
+ALLOWED_HOSTS = ['127.0.0.1', 'tramite.pythonanywhere.com']
 
 # Application definition
 
@@ -86,14 +86,11 @@ if DEBUG:
         'HOST'    : 'localhost',
         'PORT'    : '3306',
     }
+
 else:
     DATABASE_CONFIG = {
-        'ENGINE'  : 'django.db.backends.mysql',
-        'NAME'    : 'tramite_plataforma',
-        'USER'    : 'tramite_userplataforma',
-        'PASSWORD': '_CmdJj[(^X0%',
-        'HOST'    : '67.23.238.236',
-        'PORT'    : '3306',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 
 DATABASES = {
@@ -152,7 +149,8 @@ if DEBUG:
     ]
     MEDIA_ROOT  = os.path.join(BASE_DIR, 'media')
 else:
-    STATIC_ROOT = '/home/tramite/plataforma.tramiteaereo.com.br/static/'
-    MEDIA_ROOT = '/home/tramite/plataforma.tramiteaereo.com.br/media/'
+    MEDIA_ROOT = '/home/tramite/plataforma/media'
+    STATIC_ROOT = '/home/tramite/plataforma/static'
+    STATIC_URL = '/static/'
 
 MEDIA_URL = '/media/'
