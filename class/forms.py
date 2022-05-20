@@ -1,6 +1,6 @@
 from dataclasses import fields
 from django import forms
-from .models import Classes
+from .models import Classes, ClassesName
 import time
 
 class ClassesForm(forms.ModelForm):
@@ -23,3 +23,8 @@ class ClassesForm(forms.ModelForm):
             print(formatted_date1 > formatted_date2)
 
             return False
+
+class ClassesNameForm(forms.ModelForm):
+    class Meta:
+        model = ClassesName
+        fields = '__all__'

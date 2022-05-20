@@ -21,25 +21,37 @@
         <form method="POST" id="class-form">
             {% csrf_token %}
             <div class="row">
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <div class="form-group">
                         <label for="class-id">ID</label>
-                        {% render_field class_form.anac_id type="text" class="form-control" id="class-id" placeholder="Insira o ID do curso" %}
+                        {% render_field class_form.anac_id type="text" class="form-control" id="class-id" placeholder="ID da ANAC" %}
                     </div>
                 </div>
-                <div class="col-md-9">
+                <div class="col-md-10">
                     <div class="form-group">
                         <label for="class-name">Nome do curso</label>
-                        {% render_field class_form.name_class class="form-control" id="class-name" placeholder="Insira o nome do curso" %}
+                        {% render_field class_form.name_class type="text" class="form-control" id="class-name" placeholder="Insira o nome do curso" %}
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-4">
                     <div class="form-group">
                         <label for="teacher-name">Instrutor do curso</label>
-                        {% render_field class_form.instructor class="form-control" id="class-name" placeholder="Insira o nome do curso" %}
+                        {% render_field class_form.instructor class="form-control" id="teacher-name" %}
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="class-id">Carga-horária (horas)</label>
+                        {% render_field class_form.workload type="text" class="form-control" id="class-workload" placeholder="Ex. 12" %}
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="teacher-name">Período</label>
+                        {% render_field class_form.period class="form-control" id="period" %}
+                    </div>
+                </div>
+                <div class="col-md-6">
                     <div class="form-group">
                         <label>Data inicial</label>
                         <div class="input-group date" data-target-input="nearest">
@@ -50,7 +62,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-6">
                     <div class="form-group">
                         <label>Data final</label>
                         <div class="input-group date" data-target-input="nearest">
@@ -61,12 +73,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3">
-                    <div class="form-group">
-                        <label for="teacher-name">Período</label>
-                        {% render_field class_form.period class="form-control" id="period" %}
-                    </div>
-                </div>
+
             </div>
 
             <div class="row divisor mt-3">
@@ -119,6 +126,52 @@
                 </div>
             </div>
         </form>
+    </div>
+</div>
+
+<div class="card card-primary card-outline">
+    <div class="card-header">
+        <h5 class="card-title my-auto">Alunos nesse curso</h5>
+    </div>
+    <div class="card-body">
+        <table id="student-class-list" class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Nome do aluno</th>
+                    <th>CPF</th>
+                    <th>Email</th>
+                    <th>Telefone</th>
+                    <th>Cidade</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for student in students %}
+                <tr>
+                    <td>{{ student.name | title }}</td>
+                    <td>{{ student.cpf }}</td>
+                    <td>{{ student.email }}</td>
+                    <td>{{ student.primary_phone }}</td>
+                    <td>{{ student.city | title }}</td>
+                    <td class="text-center">
+                        <a href="student/edit/{{ student.id }}" title="Visualizar" data-toggle="tooltip" data-placement="top">
+                            <i class="fas fa-eye"></i>
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th>Nome do aluno</th>
+                    <th>CPF</th>
+                    <th>Email</th>
+                    <th>Telefone</th>
+                    <th>Cidade</th>
+                    <th>Ações</th>
+                </tr>
+            </tfoot>
+        </table>
     </div>
 </div>
 {% endblock content %}

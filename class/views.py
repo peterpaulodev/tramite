@@ -1,13 +1,16 @@
+import os
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, render, redirect
-from .models import Classes
+
+from student.models import Student
+from .models import Classes, ClassesName
 from instructor.models import Instructor
-from .forms import ClassesForm
+from .forms import ClassesForm, ClassesNameForm
 from django.contrib import messages
 from colorama import Fore, Back, Style
 from datetime import datetime
-from main.functions import clean_string
+from main.functions import clean_string, create_attendance_list_file
 
 # Create your views here.
 def return_self_instance(id):
@@ -64,6 +67,7 @@ def edit(request, id):
 
     _class = get_object_or_404(Classes, pk=id)
     class_form = ClassesForm(instance=_class)
+    students = Student.objects.filter(classes=_class)
 
     if request.method == 'POST':
         updated_request = request.POST.copy()
@@ -90,10 +94,59 @@ def edit(request, id):
             messages.error(request, 'Erro ao validar o cadastro do curso!')
             print(Back.RED, "==>> class_form: ", class_form.errors.as_json())
 
-        return render(request, 'class/edit.html', {'class': _class, 'class_form': class_form, 'instructors': instructors})
+        return render(request, 'class/edit.html', {'class': _class, 'class_form': class_form, 'instructors': instructors, 'students': students})
 
     else:
-        return render(request, 'class/edit.html', {'class': _class, 'class_form': class_form, 'instructors': instructors})
+        return render(request, 'class/edit.html', {'class': _class, 'class_form': class_form, 'instructors': instructors, 'students': students})
+
+@login_required
+def delete(request, id):
+    _class = get_object_or_404(Classes, pk=id)
+    _class.delete()
+
+    messages.success(request, 'Curso removido com sucesso!')
+
+    return redirect('/class')
 
 def newClass(request):
     return render(request, 'class/create.html')
+
+@login_required
+def attendance_list(request):
+    id = request.POST['class_id']
+
+    if not os.path.isdir("media/classes/"):
+        os.mkdir("media/classes/")
+
+    if not os.path.isdir("media/classes/" + str(id) + "/"):
+        os.mkdir("media/classes/" + str(id) + "/")
+
+    attendance_path = create_attendance_list_file(Classes, id)
+
+    with open(attendance_path, 'rb') as fh:
+        response = HttpResponse(fh.read(), content_type="application/pdf")
+        response['Content-Disposition'] = 'inline; filename=' + os.path.basename(attendance_path)
+        return response
+
+@login_required
+def attendance_list_export(request):
+    classes = Classes.objects.all()
+
+    return render(request, 'class/attendance_list_export.html', {'classes': classes})
+
+@login_required
+def class_name_create(request):
+    classes_name_form = ClassesNameForm()
+
+    if request.method == 'POST':
+        classes_name_form = ClassesNameForm(request.POST)
+
+        if classes_name_form.is_valid():
+            classes_name_form.save()
+            messages.success(request, 'Nome do curso cadastrado com sucesso!')
+
+        else:
+            messages.error(request, 'Erro ao validar o cadastro do curso!')
+            print(Back.RED, "==>> classes_name_form: ", classes_name_form.errors.as_json())
+
+    return render(request, 'class/attendance_list_export.html', {'classes_name_form': classes_name_form})

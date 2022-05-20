@@ -17,7 +17,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     {% block style %}{% endblock %}
 
     {% if has_datatable %}
-        {% include '../base/datatable_css.html' %}
+    {% include '../base/datatable_css.html' %}
     {% endif %}
 </head>
 
@@ -55,8 +55,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
         <aside class="main-sidebar sidebar-tramite sidebar-dark-primary elevation-4">
             <!-- Brand Logo -->
             <a href="index3.html" class="brand-link">
-                <img src="{% static 'dist/img/tramite-logo.png' %}" alt="AdminLTE Logo"
-                    class="brand-image" style="opacity: .8">
+                <img src="{% static 'dist/img/tramite-logo.png' %}" alt="AdminLTE Logo" class="brand-image"
+                    style="opacity: .8">
                 <span class="brand-text font-weight-light">Trâmite Aéreo</span>
             </a>
 
@@ -77,13 +77,35 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 <nav class="mt-2">
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
                         data-accordion="false">
+
                         <li class="nav-item">
-                            <a href="/class" class="nav-link">
+                            <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-th"></i>
                                 <p>
                                     Cursos
+                                    <i class="right fas fa-angle-left"></i>
                                 </p>
                             </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="/class" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Cursos em andamento</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="/class/class_name" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Nome dos cursos</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="/class/attendance_list_export" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Lista de presença</p>
+                                    </a>
+                                </li>
+                            </ul>
                         </li>
                         <li class="nav-item">
                             <a href="/instructor" class="nav-link">
@@ -119,14 +141,14 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         </li>
 
                         {% if user.is_authenticated %}
-                            <li class="nav-item">
-                                <a href="/accounts/logout" class="nav-link">
-                                    <i class="nav-icon fas fa-sign-out-alt"></i>
-                                    <p>
-                                        Sair
-                                    </p>
-                                </a>
-                            </li>
+                        <li class="nav-item">
+                            <a href="/accounts/logout" class="nav-link">
+                                <i class="nav-icon fas fa-sign-out-alt"></i>
+                                <p>
+                                    Sair
+                                </p>
+                            </a>
+                        </li>
                         {% endif %}
 
                     </ul>
@@ -161,25 +183,25 @@ scratch. This page gets rid of all links and provides the needed markup only.
             <!-- /.content-header -->
 
             {% if messages %}
-                <ul class="messages">
-                    {% for message in messages %}
-                        <li role="alert" {% if message.tags %}class="alert alert-{{message.tags}}"{% endif %}>
-                            {% if message.tags == 'error' %}
-                                <i class="fas fa-exclamation-triangle mr-2"></i>
-                            {% endif %}
+            <ul class="messages">
+                {% for message in messages %}
+                <li role="alert" {% if message.tags %}class="alert alert-{{message.tags}}" {% endif %}>
+                    {% if message.tags == 'error' %}
+                    <i class="fas fa-exclamation-triangle mr-2"></i>
+                    {% endif %}
 
-                            {% if message.tags == 'info' %}
-                                <i class="fas fa-exclamation-circle mr-2"></i>
-                            {% endif %}
+                    {% if message.tags == 'info' %}
+                    <i class="fas fa-exclamation-circle mr-2"></i>
+                    {% endif %}
 
-                            {% if message.tags == 'success' %}
-                                <i class="fas fa-check-circle mr-2"></i>
-                            {% endif %}
+                    {% if message.tags == 'success' %}
+                    <i class="fas fa-check-circle mr-2"></i>
+                    {% endif %}
 
-                            {{message}}
-                        </li>
-                    {% endfor %}
-                </ul>
+                    {{message}}
+                </li>
+                {% endfor %}
+            </ul>
             {% endif %}
 
             <!-- Main content -->
@@ -197,10 +219,11 @@ scratch. This page gets rid of all links and provides the needed markup only.
         <footer class="main-footer">
             <!-- To the right -->
             <div class="float-right d-none d-sm-inline">
-                Anything you want
+                <i class="fas fa-plane"></i>
             </div>
             <!-- Default to the left -->
-            <strong>Copyright &copy; 2022 <a href="https://tramite.com" target="_blank">Trâmite Aéreo</a>.</strong> Todos os direitos
+            <strong>Copyright &copy; 2022 <a href="https://tramite.com" target="_blank">Trâmite Aéreo</a>.</strong>
+            Todos os direitos
             reservados.
         </footer>
     </div>
@@ -210,7 +233,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     {% include '../base/footer.html' %}
 
     {% if has_datatable %}
-        {% include '../base/datatable_js.html' %}
+    {% include '../base/datatable_js.html' %}
     {% endif %}
 
     {% block script %}{% endblock %}

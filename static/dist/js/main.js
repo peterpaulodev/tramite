@@ -57,6 +57,8 @@ $(function () {
     bsCustomFileInput.init();
 
     $('#student-cpf').mask('000.000.000-00');
+
+    $('[data-toggle="tooltip"]').tooltip()
 });
 
 

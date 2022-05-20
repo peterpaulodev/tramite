@@ -1,6 +1,6 @@
 from django.db import models
 
-from main.functions import document_status_name
+import main.functions
 
 # Create your models here.
 class Student(models.Model):
@@ -163,40 +163,40 @@ class DocumentStatus(models.Model):
         return self.student.name
 
     def registration_form_name(self):
-        return document_status_name(self.registration_form)
+        return main.functions.document_status_name(self.registration_form)
 
     def identity_name(self):
-        return document_status_name(self.identity)
+        return main.functions.document_status_name(self.identity)
 
     def cnh_name(self):
-        return document_status_name(self.cnh)
+        return main.functions.document_status_name(self.cnh)
 
     def criminal_name(self):
-        return document_status_name(self.criminal)
+        return main.functions.document_status_name(self.criminal)
 
     def distribution_criminal_name(self):
-        return document_status_name(self.distribution_criminal)
+        return main.functions.document_status_name(self.distribution_criminal)
 
     def basic_avsec_certificate_name(self):
-        return document_status_name(self.basic_avsec_certificate)
+        return main.functions.document_status_name(self.basic_avsec_certificate)
 
     def cnv_name(self):
-        return document_status_name(self.cnv)
+        return main.functions.document_status_name(self.cnv)
 
     def work_card_name(self):
-        return document_status_name(self.work_card)
+        return main.functions.document_status_name(self.work_card)
 
     def forwarding_in_service_name(self):
-        return document_status_name(self.forwarding_in_service)
+        return main.functions.document_status_name(self.forwarding_in_service)
 
     def avsec_certificate_name(self):
-        return document_status_name(self.avsec_certificate)
+        return main.functions.document_status_name(self.avsec_certificate)
 
     def certified_high_school_name(self):
-        return document_status_name(self.certified_high_school)
+        return main.functions.document_status_name(self.certified_high_school)
 
     def proof_of_address_name(self):
-        return document_status_name(self.proof_of_address)
+        return main.functions.document_status_name(self.proof_of_address)
 
 class DocumentObservation(models.Model):
 

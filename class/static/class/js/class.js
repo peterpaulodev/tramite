@@ -13,7 +13,9 @@ $(function () {
         format: 'DD/MM/YYYY',
         date: moment().format()
     }
-
+    $('#class-workload').mask('#', {
+        reverse: true
+    });
     set_form_mask()
 
     //Date picker
@@ -32,4 +34,5 @@ function clear_class_form() {
 
 function set_form_mask() {
     $('#class-zipcode').mask('99999-999');
+
 }

@@ -4,7 +4,7 @@ from colorama import Back
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.decorators import login_required
-from main.functions import clean_string, logo_tramite_base64
+from main.functions import clean_string, create_residence_declaration_file, create_student_registration_file, logo_tramite_base64
 from student.models import DocumentObservation, DocumentStatus, Student, StudentDocuments
 from django.contrib import messages
 from student.forms import DocumentObservationForm, DocumentStatusForm, StudentDocumentsForm, StudentForm
@@ -25,11 +25,8 @@ _class = importlib.util.module_from_spec(spec)
 sys.modules["module.name"] = _class
 spec.loader.exec_module(_class)
 
-CONFIG = pdfkit.configuration(
-    wkhtmltopdf=r".\wkhtmltopdf\bin\wkhtmltopdf.exe")
-
-# Create your views here.
-
+CONFIG = pdfkit.configuration(wkhtmltopdf="./wkhtmltopdf/bin/wkhtmltopdf.exe")
+# PROD: "/home/tramite/plataforma/wkhtmltopdf/bin/wkhtmltopdf.exe"
 
 @login_required
 def index(request):
@@ -99,7 +96,6 @@ def edit(request, id):
 
     else:
         return render(request, 'student/edit.html', data)
-
 
 def registration(request):
     if request.method == 'POST':
@@ -224,33 +220,6 @@ def upload_student_document(request):
             return redirect('/student/documentation/' + str(student_id))
     else:
         return redirect('/student/documentation/' + str(student_id))
-
-
-def create_student_registration_file(id):
-    student = get_object_or_404(Student, pk=id)
-    print("==>> id: ", id)
-
-    encoded_string = logo_tramite_base64()
-
-    html = render_to_string('student/registration_form.html',
-                            {'student': student, 'logo': encoded_string})
-
-    pdf = pdfkit.from_string(html, "media/student/"+str(id) +
-                             "/ficha_cadastral_tramite.pdf", configuration=CONFIG)
-
-    return pdf
-
-
-def create_residence_declaration_file(id):
-    student = get_object_or_404(Student, pk=id)
-
-    html = render_to_string(
-        'student/residence_declaration_form.html', {'student': student})
-
-    pdf = pdfkit.from_string(html, "media/student/"+str(id) +
-                             "/declaracao_de_residencia.pdf", configuration=CONFIG)
-
-    return pdf
 
 
 def status_update(request, id):

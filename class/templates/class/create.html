@@ -20,25 +20,37 @@
         <form method="POST" id="class-form">
             {% csrf_token %}
             <div class="row">
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <div class="form-group">
                         <label for="class-id">ID</label>
-                        {% render_field class_form.anac_id type="text" class="form-control" id="class-id" placeholder="Insira o ID do curso" %}
+                        {% render_field class_form.anac_id type="text" class="form-control" id="class-id" placeholder="ID da ANAC" %}
                     </div>
                 </div>
-                <div class="col-md-9">
+                <div class="col-md-10">
                     <div class="form-group">
                         <label for="class-name">Nome do curso</label>
-                        {% render_field class_form.name type="text" class="form-control" id="class-name" placeholder="Insira o nome do curso" %}
+                        {% render_field class_form.name_class type="text" class="form-control" id="class-name" placeholder="Insira o nome do curso" %}
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-4">
                     <div class="form-group">
                         <label for="teacher-name">Instrutor do curso</label>
                         {% render_field class_form.instructor class="form-control" id="teacher-name" %}
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="class-id">Carga-horária (horas)</label>
+                        {% render_field class_form.workload type="text" class="form-control" id="class-workload" placeholder="Ex. 12" %}
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="teacher-name">Período</label>
+                        {% render_field class_form.period class="form-control" id="period" %}
+                    </div>
+                </div>
+                <div class="col-md-6">
                     <div class="form-group">
                         <label>Data inicial</label>
                         <div class="input-group date" data-target-input="nearest">
@@ -49,7 +61,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-6">
                     <div class="form-group">
                         <label>Data final</label>
                         <div class="input-group date" data-target-input="nearest">
@@ -60,12 +72,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3">
-                    <div class="form-group">
-                        <label for="teacher-name">Período</label>
-                        {% render_field class_form.period class="form-control" id="period" %}
-                    </div>
-                </div>
+
             </div>
 
             <div class="row divisor mt-3">

@@ -1,0 +1,176 @@
+{% load static %}
+
+<html>
+
+<head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+
+    <style>
+        * {
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        table,
+        th,
+        td {
+            border: 1px solid black;
+        }
+
+        table {
+            width: 100%;
+        }
+
+        .box {
+            padding: 5px;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        h3 {
+            text-decoration: underline;
+        }
+
+        .d-flex {
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+
+        .d-flex span{
+            margin-left: 100px;
+            margin-right: 90px;
+        }
+
+        p {
+            font-size: 12px;
+        }
+
+        th {
+            background-color: lightgray;
+            border: 1px solid rgba(0,0,0,.4);
+        }
+
+        .list-presence {
+            height: 100%;
+        }
+
+        .logo {
+            width: 100px;
+        }
+
+        td {
+            border: 1px solid rgba(0,0,0,.4);
+        }
+
+        table {
+            border: 1px solid rgba(0,0,0,.4);
+        }
+
+    </style>
+</head>
+
+<body>
+    <div class="box">
+        {% for date in dates_realization %}
+        <div class="list-presence">
+                {{date}}
+                <table cellspacing="0" cellpadding="10px">
+                    <tr>
+                        <td class="text-center">
+                            <img src="data:image/jpeg;base64,{{logo}}" class="logo" alt="tramite logo">
+                        </td>
+                        <td class="text-center" colspan="{{count_columns}}">
+                            <p>
+                                Lista de frequência do curso
+                            </p>
+                            <h5>
+                                {{class.name_class}}
+                            </h5>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <p>
+                                Instrutor: {{class.instructor}}
+                            </p>
+                        </td>
+                        <td colspan="{{count_columns}}">
+                            <p>
+                                Quantidade de alunos: {{student_count}}
+                            </p>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                        <p>
+                                Responsável pela aplicação de avaliação: {{class.instructor}}
+                        </p>
+                        </td>
+                        <td colspan="{{count_columns}}">
+                            <p>
+                                Carga horário do curso: {{class.workload}}
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>
+                                Local de realização:
+                            </p>
+                            <p>
+                                {{class.address}}, N°{{class.number}} - {{class.complement}}
+                                CEP {{class.zipcode}} - {{class.city}} - {{class.uf}}
+                            </p>
+                        </td>
+                        <td colspan="{{count_columns}}">
+                            <p>
+                                Data e horário de realização: {{class.initial_date | date:"d/m/Y"}} à {{class.finish_date | date:"d/m/Y"}}
+                            </p>
+                            <p>
+                                Turma: {{class.get_class_period}} - ID: {{class.anac_id}}
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Nome do aluno</th>
+                        <th width="115px">CPF</th>
+
+                        {% for period in periods %}
+                            <th width="200px">{{date}} {{period}}</th>
+                        {% endfor %}
+                    </tr>
+                    {% for student in students %}
+                        <tr>
+                            <td>{{student.name|title}}</td>
+                            <td>{{student.cpf}}</td>
+
+                            {% for period in periods %}
+                            <td></td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                </table>
+
+                <div style="margin-top: 100px;">
+                    <div>
+                        <span style="margin-right: 50px;">________________________________</span>
+                        <span>________________________________</span>
+                    </div>
+                    <div class="d-flex">
+                        <span>{{class.instructor}}</span>
+                        <span>Fatima Rocha Berruezo</span>
+                    </div>
+                    <div class="d-flex">
+                        <span>Instrutor Avsec</span>
+                        <span>Coordenadora Avsec Avsec</span>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+</body>
+
+</html>

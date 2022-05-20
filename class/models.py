@@ -1,6 +1,8 @@
 from pyexpat import model
 from django.db import models
 
+import main.functions
+
 # Create your models here.
 class Classes(models.Model):
     PERIOD_CHOICES = [
@@ -20,6 +22,7 @@ class Classes(models.Model):
     neigh = models.CharField(max_length=255)
     city = models.CharField(max_length=255)
     period = models.CharField(max_length=255, choices=PERIOD_CHOICES, null=True)
+    workload = models.CharField(max_length=255, null=True, blank=True)
     initial_date = models.DateTimeField()
     finish_date = models.DateTimeField()
     created_at = models.DateTimeField(auto_now_add=True)
@@ -31,6 +34,10 @@ class Classes(models.Model):
     def __str__(self):
         context = f'[{self.anac_id}] {self.name_class.name}'
         return context
+
+    def get_class_period(self):
+        return main.functions.class_period(self.period)
+
 
 class ClassesName(models.Model):
     name = models.CharField(max_length=255)
