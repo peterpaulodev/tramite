@@ -26,7 +26,7 @@ sys.modules["module.name"] = _class
 spec.loader.exec_module(_class)
 
 CONFIG = pdfkit.configuration(
-    wkhtmltopdf=r"C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe")
+    wkhtmltopdf=r".\wkhtmltopdf\bin\wkhtmltopdf.exe")
 
 # Create your views here.
 
