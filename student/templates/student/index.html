@@ -16,7 +16,7 @@
         <table id="student-list" class="table table-bordered table-striped">
             <thead>
                 <tr>
-                    <th>Aluno</th>
+                    <th width="50px">Aluno</th>
                     <th>Curso</th>
                     <th>Email</th>
                     <th>Telefone</th>
@@ -27,7 +27,7 @@
             <tbody>
                 {% for student in students %}
                 <tr>
-                    <td>
+                    <td width="50px">
                         <i class="fas fa-user mr-1"></i>
                         {{ student.name | title }}
                     </td>

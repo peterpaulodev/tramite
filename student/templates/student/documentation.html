@@ -644,6 +644,12 @@
                                 {% endif %}
                                 <div class="row" {% if documents.distribution_criminal %} style=" display:none "
                                     {% endif %} id="div-distribution_criminal">
+                                    <div class="col-md-12">
+                                        <p>
+                                            <i class="fas fa-info-circle" aria-hidden="true"></i>
+                                            Todos antecedentes da Justiça Federal e Tribunal de Justiça Estadual, devem ser emitidos do local onde reside.
+                                        </p>
+                                    </div>
                                     <div class="col-md-1">
                                         {% if documents.distribution_criminal %}
                                         <div class="circle sent shadow mx-auto my-2" data-toggle="tooltip"
@@ -1085,7 +1091,7 @@
                                             {% if documents.certified_high_school %}
                                             {{ documents.certified_high_school.name }}
                                             {% else %}
-                                            Insira o comprovante de conclusão de nível médio
+                                            Insira o comprovante de conclusão
                                             {% endif %}
                                         </label>
                                     </div>
@@ -1119,7 +1125,7 @@
                         <!-- pilot_license -->
                         <div class="col-md-12">
                             <div class="form-group mt-4">
-                                <label for="doc-pilot_license">Habilitação de piloto ou comissaria </label>
+                                <label for="doc-pilot_license">Habilitação de piloto ou comissária (CHT)</label>
                                 {% if documents.pilot_license %}
                                 <div class="row" id="edit-pilot_license">
                                     <div class="col-md-10">

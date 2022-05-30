@@ -28,6 +28,7 @@ spec.loader.exec_module(_class)
 CONFIG = pdfkit.configuration(wkhtmltopdf="./wkhtmltopdf/bin/wkhtmltopdf.exe")
 # PROD: "/home/tramite/plataforma/wkhtmltopdf/bin/wkhtmltopdf.exe"
 
+
 @login_required
 def index(request):
     students = Student.objects.all()
@@ -97,12 +98,12 @@ def edit(request, id):
     else:
         return render(request, 'student/edit.html', data)
 
+
 def registration(request):
     if request.method == 'POST':
         updated_request = request.POST.copy()
 
-        birth_date = datetime.strptime(
-            updated_request['birth_date'], "%d/%m/%Y")
+        birth_date = datetime.strptime(updated_request['birth_date'], "%d/%m/%Y")
         zipcode = clean_string(updated_request['zipcode'])
 
         changed_data = {
@@ -282,7 +283,7 @@ def save_observation(request, id):
 
 
 EMAIL_ADDRESS = 'peterson.paulo31@gmail.com'
-EMAIL_PASSWORD = 'oliviaeuteamo31$'
+EMAIL_PASSWORD = 'oliviaeuteamo31$$.'
 
 
 def send_pending_email(request, id):
