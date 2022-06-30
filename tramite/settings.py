@@ -78,7 +78,7 @@ WSGI_APPLICATION = 'tramite.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
-if DEBUG:
+if not DEBUG:
     DATABASE_CONFIG = {
         'ENGINE'  : 'django.db.backends.mysql',
         'NAME'    : 'tramite',
@@ -142,7 +142,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_REDIRECT_URL = '/class'
 LOGOUT_REDIRECT_URL = '/accounts/login'
 
-if DEBUG:
+if not DEBUG:
     STATICFILES_DIRS = [
         os.path.join(BASE_DIR, "static"),
         ('class', 'class/static'),
