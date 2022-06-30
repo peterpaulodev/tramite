@@ -28,7 +28,7 @@ DEBUG = True
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '137.184.227.146', 'admin.tramiteaereo.com']
 
 # Application definition
-CSRF_TRUSTED_ORIGINS = ['137.184.227.146', 'admin.tramiteaereo.com']
+# CSRF_TRUSTED_ORIGINS = ['137.184.227.146', 'admin.tramiteaereo.com']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
