@@ -25,10 +25,10 @@ SECRET_KEY = 'django-insecure-oztw(86g_4b0v$)hyn#v*s13j!!1v$$b2s)2cw%7i=uz6z)&07
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'tramite.pythonanywhere.com', 'b064-2804-14d-5885-a06b-f89c-9b8-6c78-10aa.sa.ngrok.io']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '137.184.227.146', 'admin.tramiteaereo.com']
 
 # Application definition
-CSRF_TRUSTED_ORIGINS = ['https://b064-2804-14d-5885-a06b-f89c-9b8-6c78-10aa.sa.ngrok.io']
+CSRF_TRUSTED_ORIGINS = ['137.184.227.146', 'admin.tramiteaereo.com']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
