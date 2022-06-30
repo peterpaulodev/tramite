@@ -1,0 +1,119 @@
+{% load static %}
+
+<html>
+
+<head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+
+    <style>
+        * {
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        table,
+        th,
+        td {
+            border: 1px solid black;
+        }
+
+        table {
+            width: 100%;
+        }
+
+        .box {
+            padding: 5px;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .d-flex {
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+
+        .d-flex span{
+            margin-left: 80px;
+            margin-right: 50px;
+        }
+
+        p {
+            font-size: 17px;
+            line-height: 1.5;
+        }
+
+        th {
+            background-color: lightgray;
+            border: 1px solid rgba(0,0,0,.4);
+        }
+
+        .list-presence {
+            height: 100%;
+        }
+
+        .logo {
+            width: 100px;
+        }
+
+        td {
+            border: 1px solid rgba(0,0,0,.4);
+        }
+
+        table {
+            border: 1px solid rgba(0,0,0,.4);
+        }
+
+    </style>
+</head>
+
+<body>
+    <div class="box">
+        <img src="data:image/jpeg;base64,{{logo}}" alt="tramite logo">
+        <br>
+        <br>
+        <h3 class="text-center">RECEBIMENTO DE REGULAMENTO DE CURSO E DE MATERIAL INSTRUCIONAL</h3>
+        <p>
+            Declaro que recebi o regulamento do curso <b>{{class.name_class}}, a ser realizado na data de {{class.initial_date|date:"d/m/Y"}} a {{class.finish_date|date:"d/m/Y"}}- ID: {{class.anac_id}}
+            - Turno {{class.period}}</b> - Endereço: {{class.address}} - {{class.number}}, {{class.complement}} CEP {{class.zipcode}} – {{class.city}}, e que
+            estou ciente das regras nele descritas, me comprometendo a cumpri-las em sua totalidade.
+        </p>
+        <br>
+        <p>Declaro que recebi ainda o material instrucional do referido curso.</p>
+
+        <table cellspacing="0" cellpadding="10px">
+            <tr>
+                <th width="50px">N°</th>
+                <th width="200px">Nome do aluno</th>
+                <th width="115px">CPF</th>
+                <th>Data</th>
+                <th>Assinatura</th>
+            </tr>
+            {% for student in students %}
+                <tr>
+                    <td>1</td>
+                    <td>{{student.name}}</td>
+                    <td>{{student.cpf}}</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            {% endfor %}
+        </table>
+
+        <div style="margin-top: 100px;">
+            <div>
+                <span style="margin-right: 50px;">________________________________</span>
+                <span>________________________________</span>
+            </div>
+            <div class="d-flex">
+                <span>{{class.instructor}}</span>
+                <span>Fatima Rocha Berruezo</span>
+            </div>
+            <div class="d-flex">
+                <span style="margin-right: 100px !important;">Instrutor Avsec</span>
+                <span>Coordenadora Avsec Avsec</span>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -3,7 +3,7 @@
 {% load widget_tweaks %}
 
 {% block title %}Cursos - Novo{% endblock %}
-{% block page_title %}Lista de presença{% endblock %}
+{% block page_title %}Listas e formulários do curso{% endblock %}
 
 {% block style %}
 <link rel="stylesheet" href="{% static 'class/css/class.css' %}"> {% endblock %}
@@ -11,7 +11,7 @@
 {% block content %}
 <div class="card card-primary card-outline">
     <div class="card-header">
-        <h5 class="card-title my-auto">Exportar lista de presença</h5>
+        <h5 class="card-title my-auto">Exportar</h5>
     </div>
     <div class="card-body">
         <form action={% url 'attendance_list' %} method="POST" id="class-form">
@@ -29,11 +29,17 @@
                 </div>
             </div>
             <div class="row divisor mt-3">
-                <div class="col-md-12 mb-3">
+                <div class="col-md-9 mb-1">
                     <h5>
                         <i class="fas fa-info-circle" aria-hidden="true"></i>
                         Informações do curso selecionado
                     </h5>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <a href="/media/student/{{student.id}}/ficha_cadastral_tramite.pdf" class="btn btn-info" download>
+                        <i class="fas fa-download" aria-hidden="true"></i>
+                        Baixar regulamento do curso
+                    </a>
                 </div>
             </div>
             {% for class in classes %}
@@ -72,8 +78,24 @@
                 </div>
             </div>
             {% endfor %}
-            <div class="row">
-                <div class="col-md-12 text-right mt-4">
+
+            <div class="row divisor mt-3">
+                <div class="col-md-12 mb-1">
+                    <h5>
+                        <i class="fas fa-list" aria-hidden="true"></i>
+                        Exportação de listas
+                    </h5>
+                </div>
+                <div class="col-md-6">
+                    <label for="export_type">Tipo de exportação</label>
+                    <div class="input-group">
+                        <select name="export_type" id="export_type" class="form-control" aria-invalid="false">
+                            <option value="attendance">Lista de presença</option>
+                            <option value="rule_receive">Lista de recebimento do curso</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-6 mt-auto">
                     <button type="submit" class="btn btn-success">
                         <i class="fas fa-file" aria-hidden="true"></i>
                         Exportar

@@ -10,7 +10,7 @@ from .forms import ClassesForm, ClassesNameForm
 from django.contrib import messages
 from colorama import Fore, Back, Style
 from datetime import datetime
-from main.functions import clean_string, create_attendance_list_file
+from main.functions import clean_string, create_attendance_list_file, create_rule_list_file
 
 # Create your views here.
 def return_self_instance(id):
@@ -114,6 +114,7 @@ def newClass(request):
 @login_required
 def attendance_list(request):
     id = request.POST['class_id']
+    export_type = request.POST['export_type']
 
     if not os.path.isdir("media/classes/"):
         os.mkdir("media/classes/")
@@ -121,11 +122,14 @@ def attendance_list(request):
     if not os.path.isdir("media/classes/" + str(id) + "/"):
         os.mkdir("media/classes/" + str(id) + "/")
 
-    attendance_path = create_attendance_list_file(Classes, id)
+    if export_type == 'attendance':
+        doc_export = create_attendance_list_file(Classes, id)
+    elif export_type == 'rule_receive':
+        doc_export = create_rule_list_file(Classes, id)
 
-    with open(attendance_path, 'rb') as fh:
+    with open(doc_export, 'rb') as fh:
         response = HttpResponse(fh.read(), content_type="application/pdf")
-        response['Content-Disposition'] = 'inline; filename=' + os.path.basename(attendance_path)
+        response['Content-Disposition'] = 'inline; filename=' + os.path.basename(doc_export)
         return response
 
 @login_required

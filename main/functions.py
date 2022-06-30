@@ -91,6 +91,27 @@ def create_attendance_list_file(classes, id):
 
     return path
 
+def create_rule_list_file(classes, id):
+    _class = get_object_or_404(classes, pk=id)
+    students = student.models.Student.objects.filter(classes=_class)
+
+    encoded_string = logo_tramite_base64()
+
+    context = {
+        'class': _class,
+        'logo': encoded_string,
+        'students': students,
+    }
+
+    html = render_to_string(
+        'class/rule_receive.html', context)
+
+    path = "media/classes/" + str(id) + "/lista_de_recebimento_do_regulamento - curso " + _class.anac_id + ".pdf"
+
+    pdf = pdfkit.from_string(html, path, configuration=CONFIG)
+
+    return path
+
 
 def create_student_registration_file(id):
     student_instance = get_object_or_404(student.models.Student, pk=id)
