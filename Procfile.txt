@@ -1,2 +1,1 @@
 web: gunicorn tramite.wsgi
-heroku ps:scale web=1
