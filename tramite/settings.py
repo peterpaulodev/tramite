@@ -82,13 +82,18 @@ WSGI_APPLICATION = 'tramite.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 if DEBUG:
+    # DATABASE_CONFIG = {
+    #     'ENGINE'  : 'django.db.backends.mysql',
+    #     'NAME'    : 'tramite',
+    #     'USER'    : 'root',
+    #     'PASSWORD': '102145',
+    #     'HOST'    : 'localhost',
+    #     'PORT'    : '3306',
+    # }
+
     DATABASE_CONFIG = {
-        'ENGINE'  : 'django.db.backends.mysql',
-        'NAME'    : 'tramite',
-        'USER'    : 'root',
-        'PASSWORD': '102145',
-        'HOST'    : 'localhost',
-        'PORT'    : '3306',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 
 else:
