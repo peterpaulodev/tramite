@@ -283,7 +283,7 @@ def save_observation(request, id):
 
 
 EMAIL_ADDRESS = 'peterson.paulo31@gmail.com'
-EMAIL_PASSWORD = 'oliviaeuteamo31$$.'
+EMAIL_PASSWORD = 'teste'
 
 
 def send_pending_email(request, id):
